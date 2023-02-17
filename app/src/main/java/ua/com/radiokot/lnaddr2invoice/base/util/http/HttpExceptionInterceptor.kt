@@ -2,7 +2,6 @@ package ua.com.radiokot.lnaddr2invoice.base.util.http
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import ua.com.radiokot.lnaddr2invoice.base.util.http.HttpException
 import java.net.HttpURLConnection
 
 class HttpExceptionInterceptor : Interceptor {
