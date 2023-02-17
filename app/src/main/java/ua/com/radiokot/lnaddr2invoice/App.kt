@@ -14,7 +14,7 @@ import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.di.commonModules
 import java.io.IOException
 
-class App: Application() {
+class App : Application() {
     private val logger = kLogger("App")
 
     override fun onCreate() {

@@ -1,9 +1,8 @@
-package ua.com.radiokot.lnaddr2invoice
+package ua.com.radiokot.lnaddr2invoice.model
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Assert
 import org.junit.Test
-import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 import java.math.BigDecimal
 
 class UsernameInfoTest {
@@ -36,13 +35,13 @@ class UsernameInfoTest {
             )
             Assert.assertEquals(
                 "Min sendable amount must match",
-                expected.minSendableSat.compareTo(parsed.minSendableSat),
-                0
+                0,
+                expected.minSendableSat.compareTo(parsed.minSendableSat)
             )
             Assert.assertEquals(
                 "Max sendable amount must match",
-                expected.maxSendableSat.compareTo(parsed.maxSendableSat),
-                0
+                0,
+                expected.maxSendableSat.compareTo(parsed.maxSendableSat)
             )
             Assert.assertEquals(
                 expected.description,
