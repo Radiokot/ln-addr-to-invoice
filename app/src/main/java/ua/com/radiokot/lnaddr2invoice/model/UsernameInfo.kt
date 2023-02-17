@@ -2,6 +2,7 @@ package ua.com.radiokot.lnaddr2invoice.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import ua.com.radiokot.lnaddr2invoice.base.util.SAT
 import java.math.BigDecimal
 import java.math.MathContext
 
@@ -32,11 +33,10 @@ data class UsernameInfo(
                 "There is no callback URL in the response"
             }
 
-            val sat = BigDecimal(1000)
             val maxSendableSat = response["maxSendable"]
                 ?.asLong(0)
                 ?.toBigDecimal()
-                ?.divide(sat, MathContext.DECIMAL32)
+                ?.divide(SAT, MathContext.DECIMAL32)
                 ?.stripTrailingZeros()
             checkNotNull(maxSendableSat) {
                 "There is no max sendable amount in the response"
@@ -44,7 +44,7 @@ data class UsernameInfo(
             val minSendableSat = response["minSendable"]
                 ?.asLong(0)
                 ?.toBigDecimal()
-                ?.divide(sat, MathContext.DECIMAL32)
+                ?.divide(SAT, MathContext.DECIMAL32)
                 ?.stripTrailingZeros()
             checkNotNull(minSendableSat) {
                 "There is no min sendable amount in the response"
