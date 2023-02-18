@@ -2,8 +2,10 @@ package ua.com.radiokot.lnaddr2invoice.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -15,6 +17,7 @@ import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 import java.math.BigDecimal
+import java.util.concurrent.TimeUnit
 
 class MainViewModel : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
@@ -25,7 +28,7 @@ class MainViewModel : ViewModel(), KoinComponent {
     private var usernameInfo: UsernameInfo? = null
 
     sealed class State {
-        class LoadingUsernameInfo(val address: String): State()
+        class LoadingUsernameInfo(val address: String) : State()
         class FailedLoadingUsernameInfo(val error: Throwable) : State()
         class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State()
         object CreatingInvoice : State()
@@ -43,8 +46,10 @@ class MainViewModel : ViewModel(), KoinComponent {
             parametersOf(address)
         }
 
-        useCase
-            .perform()
+        Single.zip(
+            useCase.perform(),
+            Single.timer(1, TimeUnit.SECONDS)
+        ) { usernameInfo, _ -> usernameInfo }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { state.postValue(State.LoadingUsernameInfo(address)) }
@@ -85,8 +90,10 @@ class MainViewModel : ViewModel(), KoinComponent {
             parametersOf(amountSat, usernameInfo.callbackUrl)
         }
 
-        useCase
-            .perform()
+        Single.zip(
+            useCase.perform(),
+            Single.timer(1, TimeUnit.SECONDS)
+        ) { invoiceString, _ -> invoiceString }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
