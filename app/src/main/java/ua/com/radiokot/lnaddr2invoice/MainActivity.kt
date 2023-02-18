@@ -1,5 +1,8 @@
 package ua.com.radiokot.lnaddr2invoice
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -113,19 +116,32 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewModel.State.FailedLoadingUsernameInfo ->
                     onFailedLoadingUsernameInfo()
+
+                MainViewModel.State.CreatingInvoice ->
+                    onCreatingInvoice()
+
+                is MainViewModel.State.DoneCreatingInvoice ->
+                    onDoneCreatingInvoice(state.invoiceString)
+
+                is MainViewModel.State.FailedCreatingInvoice ->
+                    onFailedCreatingInvoice()
             }
         }
     }
 
     private fun onLoadingUsernameInfo() {
+        showLoading(getString(R.string.progress_loading_username_info))
+        SoftInputUtil.hideSoftInput(this)
+    }
+
+    private fun showLoading(message: String) {
         with(binding) {
             loadingLayout.visibility = View.VISIBLE
             invoiceCreationLayout.visibility = View.GONE
 
-            payButton.visibility = View.INVISIBLE
+            payButton.visibility = View.GONE
 
-            loadingProgressTextView.text =
-                getString(R.string.progress_loading_username_info)
+            loadingProgressTextView.text = message
         }
     }
 
@@ -180,6 +196,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun payTheInvoice() {
-        toastManager.short(R.string.pay_the_invoice)
+        viewModel.createInvoice(
+            amountSat = checkNotNull(amount.value) {
+                "There is no amount to create an invoice with"
+            }
+        )
+    }
+
+    private fun onCreatingInvoice() {
+        showLoading(getString(R.string.progress_creating_invoice))
+    }
+
+    private fun onFailedCreatingInvoice() {
+        toastManager.short(R.string.error_failed_to_create_invoice)
+        finish()
+    }
+
+    private fun onDoneCreatingInvoice(invoiceString: String) {
+        launchPaymentIntent(invoiceString)
+        toastManager.long(R.string.select_your_wallet_to_pay_the_invoice)
+
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+
+    private fun launchPaymentIntent(invoiceString: String) {
+        Intent(Intent.ACTION_VIEW)
+            .setData(
+                Uri.Builder()
+                    .scheme("lightning")
+                    .authority(invoiceString)
+                    .build()
+            )
+            .also(::startActivity)
     }
 }

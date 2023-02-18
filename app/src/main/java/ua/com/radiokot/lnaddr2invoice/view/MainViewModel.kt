@@ -11,8 +11,10 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
+import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
+import java.math.BigDecimal
 
 class MainViewModel : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
@@ -20,10 +22,15 @@ class MainViewModel : ViewModel(), KoinComponent {
 
     val state: MutableLiveData<State> = MutableLiveData()
 
+    private var usernameInfo: UsernameInfo? = null
+
     sealed class State {
         object LoadingUsernameInfo : State()
         class FailedLoadingUsernameInfo(val error: Throwable) : State()
         class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State()
+        object CreatingInvoice : State()
+        class FailedCreatingInvoice(val error: Throwable) : State()
+        class DoneCreatingInvoice(val invoiceString: String) : State()
     }
 
     fun loadUsernameInfo(address: String) {
@@ -48,6 +55,7 @@ class MainViewModel : ViewModel(), KoinComponent {
                                 "\ninfo=$usernameInfo"
                     }
 
+                    this.usernameInfo = usernameInfo
                     state.postValue(State.DoneLoadingUsernameInfo(usernameInfo))
                 },
                 onError = { error ->
@@ -56,6 +64,49 @@ class MainViewModel : ViewModel(), KoinComponent {
                     }
 
                     state.postValue(State.FailedLoadingUsernameInfo(error))
+                }
+            )
+            .addTo(compositeDisposable)
+    }
+
+    fun createInvoice(amountSat: BigDecimal) {
+        val usernameInfo = this.usernameInfo
+        checkNotNull(usernameInfo) {
+            "There is no loaded username info to create an invoice for"
+        }
+
+        log.debug {
+            "createInvoice(): begin_creation:" +
+                    "\namountSat=$amountSat," +
+                    "\nusernameInfo=$usernameInfo"
+        }
+
+        val useCase = get<GetBolt11InvoiceUseCase> {
+            parametersOf(amountSat, usernameInfo.callbackUrl)
+        }
+
+        useCase
+            .perform()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                state.postValue(State.CreatingInvoice)
+            }
+            .subscribeBy(
+                onSuccess = { invoiceString ->
+                    log.debug {
+                        "createInvoice(): created:" +
+                                "\ninvoiceString=$invoiceString"
+                    }
+
+                    state.postValue(State.DoneCreatingInvoice(invoiceString))
+                },
+                onError = { error ->
+                    log.error(error) {
+                        "createInvoice(): creation_failed"
+                    }
+
+                    state.postValue(State.FailedCreatingInvoice(error))
                 }
             )
             .addTo(compositeDisposable)

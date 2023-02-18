@@ -9,4 +9,7 @@
     <string name="template_error_you_cant_send_more_than">You can\'t send more than %1$s</string>
     <string name="template_error_you_cant_send_less_than">You can\'t send less than %1$s</string>
     <string name="pay_the_invoice">Pay the invoice</string>
+    <string name="progress_creating_invoice">Creating invoice…</string>
+    <string name="error_failed_to_create_invoice">Failed to create invoice</string>
+    <string name="select_your_wallet_to_pay_the_invoice">Select your wallet to pay the invoice</string>
 </resources>
