@@ -1,8 +1,10 @@
 package ua.com.radiokot.lnaddr2invoice
 
 import android.app.Activity
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -131,7 +133,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun onLoadingUsernameInfo() {
         showLoading(getString(R.string.progress_loading_username_info))
-        SoftInputUtil.hideSoftInput(this)
     }
 
     private fun showLoading(message: String) {
@@ -204,6 +205,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onCreatingInvoice() {
+        SoftInputUtil.hideSoftInput(this)
         showLoading(getString(R.string.progress_creating_invoice))
     }
 
@@ -214,20 +216,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun onDoneCreatingInvoice(invoiceString: String) {
         launchPaymentIntent(invoiceString)
-        toastManager.long(R.string.select_your_wallet_to_pay_the_invoice)
 
         setResult(Activity.RESULT_OK)
         finish()
     }
 
     private fun launchPaymentIntent(invoiceString: String) {
-        Intent(Intent.ACTION_VIEW)
+        val paymentIntent = Intent(Intent.ACTION_VIEW)
             .setData(
                 Uri.Builder()
                     .scheme("lightning")
                     .authority(invoiceString)
                     .build()
             )
+
+        Intent.createChooser(
+            paymentIntent,
+            getString(R.string.use_your_wallet_to_pay_the_invoice)
+        )
+            .apply {
+                // Exclude ourself from the chooser.
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    putExtra(
+                        Intent.EXTRA_EXCLUDE_COMPONENTS, arrayOf(
+                            ComponentName(
+                                applicationContext,
+                                MainActivity::class.java
+                            )
+                        )
+                    )
+                }
+            }
             .also(::startActivity)
     }
 }

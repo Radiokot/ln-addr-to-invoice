@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:background="@color/black"
-    android:animateLayoutChanges="true"
     tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
