@@ -172,27 +172,27 @@ class MainActivity : AppCompatActivity() {
             amount.removeObservers(this@MainActivity)
             amount.observe(this@MainActivity) { amount ->
                 when {
+                    amountEditText.text.isNullOrEmpty() -> {
+                        amountTextInputLayout.error = null
+                    }
                     amount < usernameInfo.minSendableSat -> {
-                        amountTextInputLayout.isErrorEnabled = true
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_less_than,
                             satAmountFormat.format(usernameInfo.minSendableSat)
                         )
                     }
                     amount > usernameInfo.maxSendableSat -> {
-                        amountTextInputLayout.isErrorEnabled = true
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_more_than,
                             satAmountFormat.format(usernameInfo.maxSendableSat)
                         )
                     }
                     else -> {
-                        amountTextInputLayout.isErrorEnabled = false
                         amountTextInputLayout.error = null
                     }
                 }
 
-                canPay.postValue(amountTextInputLayout.error == null)
+                canPay.postValue(amount > BigDecimal.ZERO && amountTextInputLayout.error == null)
             }
 
             canPay.removeObservers(this@MainActivity)

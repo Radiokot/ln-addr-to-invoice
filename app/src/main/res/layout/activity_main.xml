@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    tools:background="@color/black"
     tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
@@ -73,9 +72,16 @@
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     android:hint="@string/amount"
-                    app:placeholderText="@string/enter_amount">
+                    app:errorEnabled="true"
+                    app:errorIconDrawable="@null"
+                    app:placeholderText="@string/enter_amount"
+                    app:suffixText="@string/sat">
+
+                    <!-- errorEnabled is important, otherwise
+                    the height may be messed up once the error is shown
+                    when the window is in the floating mode-->
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/amount_edit_text"
@@ -83,14 +89,6 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionSend"
                         android:inputType="number" />
-
-                    <TextView
-                        style="@style/TextAppearance.Material3.BodyLarge"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/sat" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
