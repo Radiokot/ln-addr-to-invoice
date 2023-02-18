@@ -25,7 +25,7 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="24dp" />
+                android:layout_height="16dp" />
 
             <LinearLayout
                 android:id="@+id/loading_layout"
@@ -35,12 +35,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    style="@style/Widget.Material3.CircularProgressIndicator.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:indeterminate="true"
-                    app:indicatorColor="?colorPrimary" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/loading_animation_view"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    app:lottie_autoPlay="false"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/lottie_lightning"
+                    app:lottie_speed="0.75" />
 
                 <TextView
                     android:id="@+id/loading_progress_text_view"
@@ -48,8 +50,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:gravity="center"
-                    android:text="@string/progress_loading_username_info"
-                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                    tools:text="Resolving address" />
             </LinearLayout>
 
             <LinearLayout
@@ -116,10 +118,10 @@
         android:id="@+id/pay_button"
         style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
-        app:backgroundTint="?attr/colorPrimaryDark"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/pay_the_invoice"
+        app:backgroundTint="?attr/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="@id/main_card_view"
         app:layout_constraintStart_toEndOf="@id/cancel_button"
         app:layout_constraintTop_toBottomOf="@id/main_card_view" />

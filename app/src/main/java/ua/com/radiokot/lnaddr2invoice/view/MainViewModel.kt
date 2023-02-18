@@ -25,7 +25,7 @@ class MainViewModel : ViewModel(), KoinComponent {
     private var usernameInfo: UsernameInfo? = null
 
     sealed class State {
-        object LoadingUsernameInfo : State()
+        class LoadingUsernameInfo(val address: String): State()
         class FailedLoadingUsernameInfo(val error: Throwable) : State()
         class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State()
         object CreatingInvoice : State()
@@ -47,7 +47,7 @@ class MainViewModel : ViewModel(), KoinComponent {
             .perform()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { state.postValue(State.LoadingUsernameInfo) }
+            .doOnSubscribe { state.postValue(State.LoadingUsernameInfo(address)) }
             .subscribeBy(
                 onSuccess = { usernameInfo ->
                     log.debug {

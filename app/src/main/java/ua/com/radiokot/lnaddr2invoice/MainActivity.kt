@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.state.observe(this) { state ->
             when (state) {
                 is MainViewModel.State.LoadingUsernameInfo ->
-                    onLoadingUsernameInfo()
+                    onLoadingUsernameInfo(state.address)
 
                 is MainViewModel.State.DoneLoadingUsernameInfo ->
                     onDoneLoadingUsernameInfo(state.usernameInfo)
@@ -131,8 +131,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onLoadingUsernameInfo() {
-        showLoading(getString(R.string.progress_loading_username_info))
+    private fun onLoadingUsernameInfo(address: String) {
+        showLoading(
+            getString(
+                R.string.template_resolving_address,
+                address
+            )
+        )
     }
 
     private fun showLoading(message: String) {
@@ -143,6 +148,7 @@ class MainActivity : AppCompatActivity() {
             payButton.visibility = View.GONE
 
             loadingProgressTextView.text = message
+            loadingAnimationView.playAnimation()
         }
     }
 
