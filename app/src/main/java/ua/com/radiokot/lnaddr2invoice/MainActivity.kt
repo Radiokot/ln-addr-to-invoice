@@ -1,6 +1,5 @@
 package ua.com.radiokot.lnaddr2invoice
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.addCallback
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initToolbar()
         initButtons()
         initFields()
 
@@ -67,15 +65,6 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             viewModel.loadUsernameInfo(address)
         }
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        log.debug { "onNewIntent(): data=${intent?.data}" }
-    }
-
-    private fun initToolbar() {
-        setSupportActionBar(binding.toolbar)
     }
 
     private fun initButtons() {
@@ -133,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             loadingLayout.visibility = View.VISIBLE
             invoiceCreationLayout.visibility = View.GONE
 
-            payButton.visibility = View.GONE
+            payButton.visibility = View.INVISIBLE
 
             loadingProgressTextView.text =
                 getString(R.string.progress_loading_username_info)
