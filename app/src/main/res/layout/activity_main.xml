@@ -92,6 +92,27 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <LinearLayout
+                    android:id="@+id/quick_amounts_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/QuickAmountButton"
+                        android:layout_marginStart="0dp"
+                        tools:text="200" />
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/QuickAmountButton"
+                        tools:text="500" />
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/QuickAmountButton"
+                        tools:text="1 000" />
+                </LinearLayout>
             </LinearLayout>
 
             <Space

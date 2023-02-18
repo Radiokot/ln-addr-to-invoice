@@ -10,6 +10,7 @@ import java.util.*
 
 enum class InjectedAmountFormat {
     SAT,
+    DEFAULT,
     ;
 }
 
@@ -23,6 +24,10 @@ val formatModules: List<Module> = listOf(
                     R.string.sat
                 )
             }
+        }
+
+        factory(named(InjectedAmountFormat.DEFAULT)) {
+            DecimalFormat.getInstance(Locale.getDefault())
         }
     }
 )

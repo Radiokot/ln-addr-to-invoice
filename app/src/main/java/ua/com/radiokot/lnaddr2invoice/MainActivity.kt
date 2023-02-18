@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private val toastManager: ToastManager by inject()
     private val satAmountFormat: NumberFormat by inject(named(InjectedAmountFormat.SAT))
+    private val quickAmountFormat: NumberFormat by inject(named(InjectedAmountFormat.DEFAULT))
 
     private val amount: MutableLiveData<BigDecimal> = MutableLiveData()
     private val canPay: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -87,6 +89,20 @@ class MainActivity : AppCompatActivity() {
                     payTheInvoice()
                 }
             }
+
+            // Quick amounts.
+            listOf(200, 500, 1000)
+                .forEachIndexed { i, quickAmount ->
+                    (quickAmountsLayout.getChildAt(i) as Button).apply {
+                        text = quickAmountFormat.format(quickAmount)
+
+                        setOnClickListener {
+                            val value = quickAmount.toString()
+                            amountEditText.setText(value)
+                            amountEditText.setSelection(value.length)
+                        }
+                    }
+                }
         }
     }
 
