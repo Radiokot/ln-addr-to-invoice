@@ -1,0 +1,1 @@
+Allows paying to email-like Lightning addresses from unsupported wallets
