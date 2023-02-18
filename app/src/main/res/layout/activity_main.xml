@@ -1,31 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/main_card_view"
+        style="?materialCardViewFilledStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        app:cardBackgroundColor="?colorSurface"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <LinearLayout
+                android:id="@+id/loading_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    style="@style/Widget.Material3.CircularProgressIndicator.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    app:indicatorColor="?colorPrimary" />
+
+                <TextView
+                    android:id="@+id/loading_progress_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:text="@string/progress_loading_username_info"
+                    android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancel_button"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_marginTop="16dp"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="@id/main_card_view"
+        app:layout_constraintTop_toBottomOf="@id/main_card_view" />
+</androidx.constraintlayout.widget.ConstraintLayout>

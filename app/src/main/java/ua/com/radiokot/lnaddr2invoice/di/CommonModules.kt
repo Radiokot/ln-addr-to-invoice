@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import ua.com.radiokot.lnaddr2invoice.base.util.http.HttpExceptionInterceptor
+import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import java.util.concurrent.TimeUnit
 
 val commonModules: List<Module> = listOf(
@@ -44,5 +45,14 @@ val commonModules: List<Module> = listOf(
                 .addInterceptor(getLoggingInterceptor())
                 .build()
         }
-    }
+    },
+
+    // Toast
+    module {
+        factory {
+            ToastManager(
+                context = get()
+            )
+        }
+    },
 )

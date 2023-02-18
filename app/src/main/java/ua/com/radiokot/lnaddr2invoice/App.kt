@@ -12,6 +12,8 @@ import org.koin.core.context.startKoin
 import org.slf4j.impl.HandroidLoggerAdapter
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.di.commonModules
+import ua.com.radiokot.lnaddr2invoice.di.useCaseModules
+import ua.com.radiokot.lnaddr2invoice.di.viewModelModules
 import java.io.IOException
 
 class App : Application() {
@@ -25,6 +27,8 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 commonModules
+                        + viewModelModules
+                        + useCaseModules
             )
             androidFileProperties("app.properties")
         }
