@@ -48,7 +48,7 @@ class MainViewModel : ViewModel(), KoinComponent {
 
         Single.zip(
             useCase.perform(),
-            Single.timer(1, TimeUnit.SECONDS)
+            Single.timer(500, TimeUnit.MILLISECONDS)
         ) { usernameInfo, _ -> usernameInfo }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -92,7 +92,7 @@ class MainViewModel : ViewModel(), KoinComponent {
 
         Single.zip(
             useCase.perform(),
-            Single.timer(1, TimeUnit.SECONDS)
+            Single.timer(500, TimeUnit.MILLISECONDS)
         ) { invoiceString, _ -> invoiceString }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
