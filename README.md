@@ -4,7 +4,9 @@ An Android app that allows paying to email-like Lightning addresses from unsuppo
 https://user-images.githubusercontent.com/5675681/219876476-96311878-59e0-4c47-870e-a6a87d0a2a33.mp4
 
 ## Download
-soon
+- [APK from the latest release](https://github.com/Radiokot/ln-addr-to-invoice/releases)
+- [ ] Google Play
+- [ ] F-Droid
 
 ---
 ⚡ [Send me a tip](https://iris.to/radiokot@nostr.21ideas.org)  🟣 Follow me in Nostr: `npub12358n500vfnf9j522nueg05k9yvhh97936smfgat6mledzegp5yskzrjdj`
