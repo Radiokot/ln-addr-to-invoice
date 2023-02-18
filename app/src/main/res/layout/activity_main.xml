@@ -34,12 +34,15 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="24dp" />
+
             <LinearLayout
                 android:id="@+id/loading_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginHorizontal="16dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -59,16 +62,76 @@
                     android:text="@string/progress_loading_username_info"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/invoice_creation_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/description_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    tools:text="Pay to oleg@radiokot.com.ua" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/amount_text_input_layout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:hint="@string/amount"
+                    app:placeholderText="@string/enter_amount">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/amount_edit_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionSend"
+                        android:inputType="number" />
+
+                    <TextView
+                        style="@style/TextAppearance.Material3.BodyLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/sat" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="24dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cancel_button"
-        style="@style/Widget.Material3.Button"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/cancel"
+        app:layout_constraintEnd_toStartOf="@id/pay_button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="@id/main_card_view"
         app:layout_constraintTop_toBottomOf="@id/main_card_view" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/pay_button"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/pay_the_invoice"
+        app:layout_constraintEnd_toEndOf="@id/main_card_view"
+        app:layout_constraintStart_toEndOf="@id/cancel_button"
+        app:layout_constraintTop_toBottomOf="@id/main_card_view" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,4 +3,10 @@
     <string name="cancel">Cancel</string>
     <string name="error_failed_to_load_username_info">Failed to load username info</string>
     <string name="progress_loading_username_info">Loading username info…</string>
+    <string name="amount">Amount</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="sat">sat</string>
+    <string name="template_error_you_cant_send_more_than">You can\'t send more than %1$s</string>
+    <string name="template_error_you_cant_send_less_than">You can\'t send less than %1$s</string>
+    <string name="pay_the_invoice">Pay the invoice</string>
 </resources>
