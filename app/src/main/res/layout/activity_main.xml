@@ -86,9 +86,10 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/amount_edit_text"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:imeOptions="actionSend"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:maxLines="1" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
