@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Lightning Address to Invoice</string>
+    <string name="app_name">LN Address to Invoice</string>
     <string name="cancel">Cancel</string>
     <string name="error_failed_to_load_username_info">Failed to load username info</string>
     <string name="template_resolving_address">Resolving %1$s…</string>
