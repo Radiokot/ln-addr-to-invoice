@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MutableLiveData
+import okio.IOException
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                     onDoneLoadingUsernameInfo(state.usernameInfo)
 
                 is MainViewModel.State.FailedLoadingUsernameInfo ->
-                    onFailedLoadingUsernameInfo()
+                    onFailedLoadingUsernameInfo(state.error)
 
                 MainViewModel.State.CreatingInvoice ->
                     onCreatingInvoice()
@@ -168,8 +169,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onFailedLoadingUsernameInfo() {
-        toastManager.short(R.string.error_failed_to_load_username_info)
+    private fun onFailedLoadingUsernameInfo(error: Throwable) {
+        when (error) {
+            is IOException -> {
+                toastManager.long(R.string.error_need_internet_to_load_username_info)
+            }
+            else  -> {
+                toastManager.long(R.string.error_failed_to_load_username_info)
+            }
+        }
         finish()
     }
 

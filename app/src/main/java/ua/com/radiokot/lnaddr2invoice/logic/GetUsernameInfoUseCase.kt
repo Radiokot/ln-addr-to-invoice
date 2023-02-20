@@ -34,6 +34,9 @@ class GetUsernameInfoUseCase(
     private fun getUsernameAndHost(): Single<Pair<String, String>> = {
         // Parse the address with [HttpUrl].
         with("http://$address".toHttpUrl()) {
+            check(username.isNotEmpty()) {
+                "The address has no username"
+            }
             username to host
         }
     }.toSingle()
