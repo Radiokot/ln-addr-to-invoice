@@ -1,10 +1,12 @@
 # <img src="https://raw.githubusercontent.com/Radiokot/ln-addr-to-invoice/main/app/src/main/res/mipmap-hdpi/ic_launcher.png" alt="Icon" style="vertical-align: bottom; height: 1.2em;"/> LN Address to Invoice
-An Android app that allows paying to email-like Lightning addresses from unsupported wallets, like Muun. It turns the addresses to convenient invoices.
+Some popular Bitcoin Lightning wallets, like Muun or Blue Wallet, don't support email-like Lightning addresses. This app allows paying to such addresses by turning them to convenient invoices. For me, it is helpful when zapping and tipping in Nostr.
 
 https://user-images.githubusercontent.com/5675681/219876476-96311878-59e0-4c47-870e-a6a87d0a2a33.mp4
 
 ## How to use
-To use the app, click on the Lightning address link (like tip or zap in Nostr) and select "LN Address to Invoice" app. Follow the instructions and then pay the invoice with your favorite wallet. The app doesn't add any extra fee to your payment.
+To use the app, click on the Lightning address link (like tip or zap in Nostr) and select "LN Address to Invoice" app. Follow the instructions and then pay the invoice with your favorite wallet. 
+
+The app doesn't add any extra fee to your payment.
 
 ## Download
 - [APK from the latest release](https://github.com/Radiokot/ln-addr-to-invoice/releases)
