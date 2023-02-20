@@ -12,6 +12,8 @@ To use the app, click on the Lightning address link (like tip or zap in Nostr) a
 - [ ] F-Droid
 
 ---
-⚡ [Send me a tip](https://iris.to/radiokot@nostr.21ideas.org)  🟣 Follow me in Nostr: `npub12358n500vfnf9j522nueg05k9yvhh97936smfgat6mledzegp5yskzrjdj`
+⚡ [Send me a tip](https://iris.to/radiokot@nostr.21ideas.org)
 
-![image](https://user-images.githubusercontent.com/5675681/219876946-56ae7af0-6bec-4744-a2fa-f061e584e9cc.png)
+![lightning:oleg@radiokot.com.ua](https://user-images.githubusercontent.com/5675681/220079850-2370cffb-761b-44cb-b106-3a70ff89e1a6.png)
+
+🟣 Follow me on Nostr: `npub12358n500vfnf9j522nueg05k9yvhh97936smfgat6mledzegp5yskzrjdj`
