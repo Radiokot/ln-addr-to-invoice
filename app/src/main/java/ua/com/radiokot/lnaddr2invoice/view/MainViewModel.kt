@@ -12,6 +12,9 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
+import ua.com.radiokot.lnaddr2invoice.data.CreatedInvoicesCounter
+import ua.com.radiokot.lnaddr2invoice.data.SharedPrefsTipStateStorage
+import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
 import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
@@ -20,6 +23,9 @@ import java.util.concurrent.TimeUnit
 
 class MainViewModel(
     private val authorTipAddress: String,
+    private val createdInvoicesCounter: CreatedInvoicesCounter,
+    private val tipStateStorage: TipStateStorage,
+    private val tipEveryNthInvoice: Int,
 ) : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
     private val log = kLogger("MainVM")
@@ -27,6 +33,7 @@ class MainViewModel(
     val state: MutableLiveData<State> = MutableLiveData()
 
     private var usernameInfo: UsernameInfo? = null
+    private var isTipping: Boolean = false
 
     sealed class State {
         class LoadingUsernameInfo(val address: String) : State()
@@ -36,6 +43,7 @@ class MainViewModel(
         class FailedCreatingInvoice(val error: Throwable) : State()
         class DoneCreatingInvoice(val invoiceString: String) : State()
         object Tip : State()
+        object Finish : State()
     }
 
     fun loadUsernameInfo(address: String) {
@@ -103,9 +111,12 @@ class MainViewModel(
             }
             .subscribeBy(
                 onSuccess = { invoiceString ->
+                    createdInvoicesCounter.incrementCreatedInvoices()
+
                     log.debug {
                         "createInvoice(): created:" +
-                                "\ninvoiceString=$invoiceString"
+                                "\ninvoiceString=$invoiceString," +
+                                "\ncreatedInvoices=${createdInvoicesCounter.createdInvoiceCount}"
                     }
 
                     state.postValue(State.DoneCreatingInvoice(invoiceString))
@@ -127,12 +138,37 @@ class MainViewModel(
         }
     }
 
+    fun onInvoicePaymentLaunched() {
+        val suggestTip =
+            !isTipping
+                    && !tipStateStorage.isEverTipped
+                    && createdInvoicesCounter.createdInvoiceCount % tipEveryNthInvoice == 0
+
+        log.debug {
+            "onInvoicePaymentLaunched(): launched:" +
+                    "\nsuggestTip=$suggestTip," +
+                    "\neverTipped=${tipStateStorage.isEverTipped}" +
+                    "\nisTipping=$isTipping"
+        }
+
+        if (isTipping) {
+            tipStateStorage.isEverTipped = true
+        }
+
+        if (suggestTip) {
+            state.postValue(State.Tip)
+        } else {
+            state.postValue(State.Finish)
+        }
+    }
+
     fun tip() {
         log.debug {
             "tip(): make_a_tip:" +
                     "\nauthorTipAddress=$authorTipAddress"
         }
 
+        isTipping = true
         loadUsernameInfo(authorTipAddress)
     }
 

@@ -145,6 +145,9 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewModel.State.Tip ->
                     onTip()
+
+                is MainViewModel.State.Finish ->
+                    finish()
             }
         }
     }
@@ -259,7 +262,8 @@ class MainActivity : AppCompatActivity() {
         launchPaymentIntent(invoiceString)
 
         setResult(Activity.RESULT_OK)
-        finish()
+
+        viewModel.onInvoicePaymentLaunched()
     }
 
     private fun launchPaymentIntent(invoiceString: String) {
@@ -298,6 +302,9 @@ class MainActivity : AppCompatActivity() {
             loadingLayout.visibility = View.GONE
             invoiceCreationLayout.visibility = View.GONE
             tipLayout.visibility = View.VISIBLE
+
+            canPay.removeObservers(this@MainActivity)
+            amountEditText.text?.clear()
 
             with(primaryButton) {
                 visibility = View.VISIBLE
