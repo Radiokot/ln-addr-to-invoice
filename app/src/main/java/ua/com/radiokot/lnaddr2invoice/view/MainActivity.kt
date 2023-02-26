@@ -1,4 +1,4 @@
-package ua.com.radiokot.lnaddr2invoice
+package ua.com.radiokot.lnaddr2invoice.view
 
 import android.app.Activity
 import android.content.ComponentName
@@ -17,13 +17,13 @@ import okio.IOException
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
+import ua.com.radiokot.lnaddr2invoice.R
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.base.view.SoftInputUtil
 import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityMainBinding
 import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
-import ua.com.radiokot.lnaddr2invoice.view.MainViewModel
 import java.math.BigDecimal
 import java.text.NumberFormat
 
