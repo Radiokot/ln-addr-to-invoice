@@ -7,6 +7,10 @@ import ua.com.radiokot.lnaddr2invoice.view.MainViewModel
 
 val viewModelModules: List<Module> = listOf(
     module {
-        viewModel { MainViewModel() }
+        viewModel {
+            MainViewModel(
+                authorTipAddress = getProperty("authorTipAddress")
+            )
+        }
     }
 )

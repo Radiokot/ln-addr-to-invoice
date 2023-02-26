@@ -13,4 +13,7 @@
     <string name="progress_creating_invoice">Creating invoice…</string>
     <string name="error_failed_to_create_invoice">Failed to create invoice</string>
     <string name="use_your_wallet_to_pay_the_invoice">Use your wallet to pay the invoice</string>
+    <string name="tip_suggestion">I hope you like the app!\nPlease, consider a tip for the author</string>
+    <string name="tip_the_author">Tip the author</string>
+    <string name="bottom_label">LN Address to Invoice. Support &#128150;</string>
 </resources>

@@ -85,10 +85,8 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
 
-            payButton.setOnClickListener {
-                if (canPay.value == true) {
-                    payTheInvoice()
-                }
+            bottomLabelTextView.setOnClickListener {
+                viewModel.onBottomLabelClicked()
             }
 
             // Quick amounts.
@@ -144,6 +142,9 @@ class MainActivity : AppCompatActivity() {
 
                 is MainViewModel.State.FailedCreatingInvoice ->
                     onFailedCreatingInvoice()
+
+                is MainViewModel.State.Tip ->
+                    onTip()
             }
         }
     }
@@ -161,8 +162,9 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             loadingLayout.visibility = View.VISIBLE
             invoiceCreationLayout.visibility = View.GONE
+            tipLayout.visibility = View.GONE
 
-            payButton.visibility = View.GONE
+            primaryButton.visibility = View.GONE
 
             loadingProgressTextView.text = message
             loadingAnimationView.playAnimation()
@@ -174,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             is IOException -> {
                 toastManager.long(R.string.error_need_internet_to_load_username_info)
             }
-            else  -> {
+            else -> {
                 toastManager.long(R.string.error_failed_to_load_username_info)
             }
         }
@@ -185,8 +187,17 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             loadingLayout.visibility = View.GONE
             invoiceCreationLayout.visibility = View.VISIBLE
+            tipLayout.visibility = View.GONE
 
-            payButton.visibility = View.VISIBLE
+            with(primaryButton) {
+                visibility = View.VISIBLE
+                text = getString(R.string.pay_the_invoice)
+                setOnClickListener {
+                    if (canPay.value == true) {
+                        payTheInvoice()
+                    }
+                }
+            }
 
             descriptionTextView.text = usernameInfo.description
 
@@ -221,7 +232,7 @@ class MainActivity : AppCompatActivity() {
 
             canPay.removeObservers(this@MainActivity)
             canPay.observe(this@MainActivity) { canPay ->
-                payButton.isEnabled = canPay
+                primaryButton.isEnabled = canPay
             }
         }
     }
@@ -278,5 +289,24 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .also(::startActivity)
+    }
+
+    private fun onTip() {
+        SoftInputUtil.hideSoftInput(this)
+
+        with(binding) {
+            loadingLayout.visibility = View.GONE
+            invoiceCreationLayout.visibility = View.GONE
+            tipLayout.visibility = View.VISIBLE
+
+            with(primaryButton) {
+                visibility = View.VISIBLE
+                text = getString(R.string.tip_the_author)
+                isEnabled = true
+                setOnClickListener {
+                    viewModel.tip()
+                }
+            }
+        }
     }
 }

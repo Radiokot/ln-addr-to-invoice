@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -19,7 +18,9 @@ import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
-class MainViewModel : ViewModel(), KoinComponent {
+class MainViewModel(
+    private val authorTipAddress: String,
+) : ViewModel(), KoinComponent {
     private val compositeDisposable = CompositeDisposable()
     private val log = kLogger("MainVM")
 
@@ -34,6 +35,7 @@ class MainViewModel : ViewModel(), KoinComponent {
         object CreatingInvoice : State()
         class FailedCreatingInvoice(val error: Throwable) : State()
         class DoneCreatingInvoice(val invoiceString: String) : State()
+        object Tip : State()
     }
 
     fun loadUsernameInfo(address: String) {
@@ -117,6 +119,21 @@ class MainViewModel : ViewModel(), KoinComponent {
                 }
             )
             .addTo(compositeDisposable)
+    }
+
+    fun onBottomLabelClicked() {
+        if (state.value is State.DoneLoadingUsernameInfo) {
+            state.postValue(State.Tip)
+        }
+    }
+
+    fun tip() {
+        log.debug {
+            "tip(): make_a_tip:" +
+                    "\nauthorTipAddress=$authorTipAddress"
+        }
+
+        loadUsernameInfo(authorTipAddress)
     }
 
     override fun onCleared() {
