@@ -1,0 +1,7 @@
+Added:
+- Tip suggestion screen, that can be opened by the bottom label click
+- Showing the tip suggestion screen after each 3rd invoice, if never tipped
+- Check if the address has a username
+
+Changed:
+- Username loading errors made more specific
