@@ -3,8 +3,8 @@ package ua.com.radiokot.lnaddr2invoice
 import android.app.Application
 import android.os.Build
 import com.google.android.material.color.DynamicColors
-import io.reactivex.exceptions.UndeliverableException
-import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.rxjava3.exceptions.UndeliverableException
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidFileProperties
 import org.koin.android.ext.koin.androidLogger
@@ -41,7 +41,7 @@ class App : Application() {
 
     private fun initRxErrorHandler() {
         RxJavaPlugins.setErrorHandler {
-            var e = it
+            var e: Throwable? = it
             if (e is UndeliverableException) {
                 e = e.cause
             }

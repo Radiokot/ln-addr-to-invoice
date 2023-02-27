@@ -2,18 +2,17 @@ package ua.com.radiokot.lnaddr2invoice.view
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.addTo
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.data.CreatedInvoicesCounter
-import ua.com.radiokot.lnaddr2invoice.data.SharedPrefsTipStateStorage
 import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
 import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
