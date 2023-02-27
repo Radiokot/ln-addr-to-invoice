@@ -27,6 +27,12 @@ class MainViewModel(
     private val tipStateStorage: TipStateStorage,
     private val tipEveryNthInvoice: Int,
 ) : ViewModel(), KoinComponent {
+    init {
+        require(tipEveryNthInvoice > 0) {
+            "The value must be positive"
+        }
+    }
+
     private val compositeDisposable = CompositeDisposable()
     private val log = kLogger("MainVM")
 
