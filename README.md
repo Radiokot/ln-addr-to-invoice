@@ -13,6 +13,13 @@ The app doesn't add any extra fee to your payment.
 - [Google Play](https://play.google.com/store/apps/details?id=ua.com.radiokot.lnaddr2invoice)
 - [ ] F-Droid
 
+## Tech stack
+- Kotlin
+- RxJava
+- Koin dependency injection
+- ViewModel
+- kotlin-logging with slf4j-handroid
+
 ---
 ⚡ [Send me a tip](https://iris.to/radiokot@nostr.21ideas.org)
 
