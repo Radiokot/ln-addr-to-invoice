@@ -10,8 +10,8 @@ The app doesn't add any extra fee to your payment.
 
 ## Download
 - [APK from the latest release](https://github.com/Radiokot/ln-addr-to-invoice/releases)
+- [F-Droid](https://f-droid.org/packages/ua.com.radiokot.lnaddr2invoice)
 - [Google Play](https://play.google.com/store/apps/details?id=ua.com.radiokot.lnaddr2invoice)
-- [ ] F-Droid
 
 ## Tech stack
 - Kotlin
