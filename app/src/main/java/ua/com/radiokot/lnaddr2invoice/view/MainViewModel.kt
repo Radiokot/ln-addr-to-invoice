@@ -43,6 +43,7 @@ class MainViewModel(
     val canPay = MutableLiveData(false)
 
     private var isTipping = false
+    private var suggestedTipping = false
     private val parsedAmount: BigDecimal
         get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
     private var lastExplicitlyLoadedUsernameInfo: UsernameInfo? = null
@@ -107,7 +108,9 @@ class MainViewModel(
         val fallbackUsernameInfo = lastExplicitlyLoadedUsernameInfo
 
         when {
-            (state.value is State.Tip || isTipping) && fallbackUsernameInfo != null -> {
+            (state.value is State.Tip || isTipping)
+                    && !suggestedTipping
+                    && fallbackUsernameInfo != null -> {
                 isTipping = false
                 cancelUsernameInfoLoading()
                 cancelInvoiceCreation()
@@ -255,6 +258,7 @@ class MainViewModel(
         }
 
         if (suggestTip) {
+            suggestedTipping = true
             state.value = State.Tip
         } else {
             state.value = State.Final.Finish
