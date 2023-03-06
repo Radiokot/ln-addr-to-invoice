@@ -1,7 +1,22 @@
 package ua.com.radiokot.lnaddr2invoice.base.extension
 
-fun <T : Any> T?.checkNotNull(): T =
-    checkNotNull(this)
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
-inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T =
-    checkNotNull(this, lazyMessage)
+@OptIn(ExperimentalContracts::class)
+fun <T : Any> T?.checkNotNull(): T {
+    contract {
+        returns() implies (this@checkNotNull != null)
+    }
+
+    return checkNotNull(this)
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun <T : Any> T?.checkNotNull(lazyMessage: () -> Any): T {
+    contract {
+        returns() implies (this@checkNotNull != null)
+    }
+
+    return checkNotNull(this, lazyMessage)
+}
