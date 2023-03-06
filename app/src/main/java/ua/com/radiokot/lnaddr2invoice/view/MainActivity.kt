@@ -140,9 +140,25 @@ class MainActivity : AppCompatActivity() {
                         "\nstate=$state"
             }
 
+            // Fast finishing avoids display of an intermediate state during the animation.
+            if (state is MainViewModel.State.Final.Finish) {
+                log.debug {
+                    "subscribeToState(): fast_finishing"
+                }
+                finish()
+                return@observe
+            }
+
             with(binding) {
+                // No need to update the view when finishing.
+                if (state is MainViewModel.State.Final) {
+                    return@with
+                }
+
                 loadingLayout.visibility =
-                    if (state is MainViewModel.State.Loading)
+                    if (state is MainViewModel.State.Loading
+                        || state is MainViewModel.State.DoneCreatingInvoice
+                    )
                         View.VISIBLE
                     else
                         View.GONE
@@ -160,6 +176,9 @@ class MainActivity : AppCompatActivity() {
                                     getString(R.string.progress_creating_invoice)
                             }
                         }
+                        // Keep the loading visible before finish to avoid blinking.
+                        is MainViewModel.State.DoneCreatingInvoice ->
+                            getString(R.string.progress_creating_invoice)
                         else ->
                             "You shouldn't see this"
                     }
@@ -229,7 +248,9 @@ class MainActivity : AppCompatActivity() {
                 is MainViewModel.State.Tip ->
                     onTip()
 
-                is MainViewModel.State.Final.Finish -> {}
+                MainViewModel.State.Final.Finish -> {
+                    // See fast finishing above.
+                }
             }
 
             if (state is MainViewModel.State.Final) {
