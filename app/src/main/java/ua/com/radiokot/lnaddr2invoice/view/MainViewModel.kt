@@ -36,9 +36,14 @@ class MainViewModel(
     private val log = kLogger("MainVM")
 
     val state: MutableLiveData<State> = MutableLiveData()
+    val enteredAmount: MutableLiveData<CharSequence?> = MutableLiveData(null)
+    val enteredAmountError: MutableLiveData<EnteredAmountError> =
+        MutableLiveData(EnteredAmountError.None)
+    val canPay: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    private var usernameInfo: UsernameInfo? = null
     private var isTipping: Boolean = false
+    private val parsedAmount: BigDecimal
+        get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
 
     sealed class State {
         class LoadingUsernameInfo(val address: String) : State()
@@ -49,6 +54,45 @@ class MainViewModel(
         class DoneCreatingInvoice(val invoiceString: String) : State()
         object Tip : State()
         object Finish : State()
+    }
+
+    sealed class EnteredAmountError {
+        class TooSmall(val minAmount: BigDecimal) : EnteredAmountError()
+        class TooBig(val maxAmount: BigDecimal) : EnteredAmountError()
+        object None : EnteredAmountError()
+    }
+
+    init {
+        initEnteredAmountValidation()
+    }
+
+    private fun initEnteredAmountValidation() {
+        enteredAmount.observeForever { enteredAmount ->
+            val usernameInfo = (state.value as? State.DoneLoadingUsernameInfo)?.usernameInfo
+                ?: return@observeForever
+            val parsedAmount = this.parsedAmount
+
+            when {
+                enteredAmount.isNullOrEmpty() -> {
+                    enteredAmountError.value = EnteredAmountError.None
+                }
+                parsedAmount < usernameInfo.minSendableSat -> {
+                    enteredAmountError.value =
+                        EnteredAmountError.TooSmall(usernameInfo.minSendableSat)
+                }
+                parsedAmount > usernameInfo.maxSendableSat -> {
+                    enteredAmountError.value =
+                        EnteredAmountError.TooBig(usernameInfo.maxSendableSat)
+                }
+                else -> {
+                    enteredAmountError.value = EnteredAmountError.None
+                }
+            }
+
+            canPay.value =
+                parsedAmount > BigDecimal.ZERO
+                        && enteredAmountError.value == EnteredAmountError.None
+        }
     }
 
     fun loadUsernameInfo(address: String) {
@@ -67,7 +111,7 @@ class MainViewModel(
         ) { usernameInfo, _ -> usernameInfo }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { state.postValue(State.LoadingUsernameInfo(address)) }
+            .doOnSubscribe { state.value = State.LoadingUsernameInfo(address) }
             .subscribeBy(
                 onSuccess = { usernameInfo ->
                     log.debug {
@@ -75,25 +119,31 @@ class MainViewModel(
                                 "\ninfo=$usernameInfo"
                     }
 
-                    this.usernameInfo = usernameInfo
-                    state.postValue(State.DoneLoadingUsernameInfo(usernameInfo))
+                    onDoneLoadingUsernameInfo(usernameInfo)
                 },
                 onError = { error ->
                     log.error(error) {
                         "loadUsernameInfo(): loading_failed"
                     }
 
-                    state.postValue(State.FailedLoadingUsernameInfo(error))
+                    state.value = State.FailedLoadingUsernameInfo(error)
                 }
             )
             .addTo(compositeDisposable)
     }
 
-    fun createInvoice(amountSat: BigDecimal) {
-        val usernameInfo = this.usernameInfo
+    private fun onDoneLoadingUsernameInfo(usernameInfo: UsernameInfo) {
+        enteredAmount.value = ""
+        state.value = State.DoneLoadingUsernameInfo(usernameInfo)
+    }
+
+    fun createInvoice() {
+        val usernameInfo = (state.value as? State.DoneLoadingUsernameInfo)?.usernameInfo
         checkNotNull(usernameInfo) {
             "There is no loaded username info to create an invoice for"
         }
+
+        val amountSat = parsedAmount
 
         log.debug {
             "createInvoice(): begin_creation:" +
@@ -112,7 +162,7 @@ class MainViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                state.postValue(State.CreatingInvoice)
+                state.value = State.CreatingInvoice
             }
             .subscribeBy(
                 onSuccess = { invoiceString ->
@@ -124,14 +174,14 @@ class MainViewModel(
                                 "\ncreatedInvoices=${createdInvoicesCounter.createdInvoiceCount}"
                     }
 
-                    state.postValue(State.DoneCreatingInvoice(invoiceString))
+                    state.value = State.DoneCreatingInvoice(invoiceString)
                 },
                 onError = { error ->
                     log.error(error) {
                         "createInvoice(): creation_failed"
                     }
 
-                    state.postValue(State.FailedCreatingInvoice(error))
+                    state.value = State.FailedCreatingInvoice(error)
                 }
             )
             .addTo(compositeDisposable)
@@ -139,8 +189,13 @@ class MainViewModel(
 
     fun onBottomLabelClicked() {
         if (state.value is State.DoneLoadingUsernameInfo) {
-            state.postValue(State.Tip)
+            toTip()
         }
+    }
+
+    private fun toTip() {
+        enteredAmount.value = null
+        state.value = State.Tip
     }
 
     fun onInvoicePaymentLaunched() {
@@ -161,9 +216,9 @@ class MainViewModel(
         }
 
         if (suggestTip) {
-            state.postValue(State.Tip)
+            state.value = State.Tip
         } else {
-            state.postValue(State.Finish)
+            state.value = State.Finish
         }
     }
 

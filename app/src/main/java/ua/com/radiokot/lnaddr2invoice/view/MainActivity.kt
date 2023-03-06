@@ -11,20 +11,18 @@ import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.MutableLiveData
 import okio.IOException
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 import ua.com.radiokot.lnaddr2invoice.R
+import ua.com.radiokot.lnaddr2invoice.base.extension.bindTextTwoWay
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.base.view.SoftInputUtil
 import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityMainBinding
 import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
-import java.math.BigDecimal
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
@@ -35,9 +33,6 @@ class MainActivity : AppCompatActivity() {
     private val toastManager: ToastManager by inject()
     private val satAmountFormat: NumberFormat by inject(named(InjectedAmountFormat.SAT))
     private val quickAmountFormat: NumberFormat by inject(named(InjectedAmountFormat.DEFAULT))
-
-    private val amount: MutableLiveData<BigDecimal> = MutableLiveData()
-    private val canPay: MutableLiveData<Boolean> = MutableLiveData(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -96,9 +91,7 @@ class MainActivity : AppCompatActivity() {
                         text = quickAmountFormat.format(quickAmount)
 
                         setOnClickListener {
-                            val value = quickAmount.toString()
-                            amountEditText.setText(value)
-                            amountEditText.setSelection(value.length)
+                            viewModel.enteredAmount.value = quickAmount.toString()
                         }
                     }
                 }
@@ -107,12 +100,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initFields() {
         with(binding) {
-            amountEditText.doOnTextChanged { text, _, _, _ ->
-                amount.postValue(BigDecimal(text?.toString()?.toLongOrNull() ?: 0L))
-            }
+            amountEditText.bindTextTwoWay(viewModel.enteredAmount)
 
             amountEditText.setOnEditorActionListener { _, _, _ ->
-                if (canPay.value == true) {
+                if (viewModel.canPay.value == true) {
                     payTheInvoice()
                     false
                 } else {
@@ -196,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                 visibility = View.VISIBLE
                 text = getString(R.string.pay_the_invoice)
                 setOnClickListener {
-                    if (canPay.value == true) {
+                    if (viewModel.canPay.value == true) {
                         payTheInvoice()
                     }
                 }
@@ -207,45 +198,36 @@ class MainActivity : AppCompatActivity() {
             amountEditText.requestFocus()
             SoftInputUtil.showSoftInputOnView(amountEditText)
 
-            amount.removeObservers(this@MainActivity)
-            amount.observe(this@MainActivity) { amount ->
-                when {
-                    amountEditText.text.isNullOrEmpty() -> {
+            viewModel.enteredAmountError.removeObservers(this@MainActivity)
+            viewModel.enteredAmountError.observe(this@MainActivity) { error ->
+                when (error) {
+                    is MainViewModel.EnteredAmountError.None -> {
                         amountTextInputLayout.error = null
                     }
-                    amount < usernameInfo.minSendableSat -> {
+                    is MainViewModel.EnteredAmountError.TooSmall -> {
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_less_than,
-                            satAmountFormat.format(usernameInfo.minSendableSat)
+                            satAmountFormat.format(error.minAmount)
                         )
                     }
-                    amount > usernameInfo.maxSendableSat -> {
+                    is MainViewModel.EnteredAmountError.TooBig -> {
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_more_than,
-                            satAmountFormat.format(usernameInfo.maxSendableSat)
+                            satAmountFormat.format(error.maxAmount)
                         )
                     }
-                    else -> {
-                        amountTextInputLayout.error = null
-                    }
                 }
-
-                canPay.postValue(amount > BigDecimal.ZERO && amountTextInputLayout.error == null)
             }
 
-            canPay.removeObservers(this@MainActivity)
-            canPay.observe(this@MainActivity) { canPay ->
+            viewModel.canPay.removeObservers(this@MainActivity)
+            viewModel.canPay.observe(this@MainActivity) { canPay ->
                 primaryButton.isEnabled = canPay
             }
         }
     }
 
     private fun payTheInvoice() {
-        viewModel.createInvoice(
-            amountSat = checkNotNull(amount.value) {
-                "There is no amount to create an invoice with"
-            }
-        )
+        viewModel.createInvoice()
     }
 
     private fun onCreatingInvoice() {
@@ -303,8 +285,7 @@ class MainActivity : AppCompatActivity() {
             invoiceCreationLayout.visibility = View.GONE
             tipLayout.visibility = View.VISIBLE
 
-            canPay.removeObservers(this@MainActivity)
-            amountEditText.text?.clear()
+            viewModel.canPay.removeObservers(this@MainActivity)
 
             with(primaryButton) {
                 visibility = View.VISIBLE
