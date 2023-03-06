@@ -2,6 +2,7 @@ package ua.com.radiokot.lnaddr2invoice.model
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.util.SAT
 import java.math.BigDecimal
 import java.math.MathContext
@@ -26,50 +27,52 @@ data class UsernameInfo(
                 "The response is not an object"
             }
 
-            val callbackUrl = response["callback"]
+            val callbackUrl: String = response["callback"]
                 ?.asText("")
                 ?.takeIf(String::isNotBlank)
-            checkNotNull(callbackUrl) {
-                "There is no callback URL in the response"
-            }
+                .checkNotNull {
+                    "There is no callback URL in the response"
+                }
 
-            val maxSendableSat = response["maxSendable"]
+            val maxSendableSat: BigDecimal = response["maxSendable"]
                 ?.asLong(0)
                 ?.toBigDecimal()
                 ?.divide(SAT, MathContext.DECIMAL32)
                 ?.stripTrailingZeros()
-            checkNotNull(maxSendableSat) {
-                "There is no max sendable amount in the response"
-            }
-            val minSendableSat = response["minSendable"]
+                .checkNotNull {
+                    "There is no max sendable amount in the response"
+                }
+
+            val minSendableSat: BigDecimal = response["minSendable"]
                 ?.asLong(0)
                 ?.toBigDecimal()
                 ?.divide(SAT, MathContext.DECIMAL32)
                 ?.stripTrailingZeros()
-            checkNotNull(minSendableSat) {
-                "There is no min sendable amount in the response"
-            }
+                .checkNotNull {
+                    "There is no min sendable amount in the response"
+                }
 
-            val metadataString = response["metadata"]
+            val metadata: JsonNode = response["metadata"]
                 ?.asText("")
                 ?.takeIf(String::isNotBlank)
-            checkNotNull(metadataString) {
-                "There is no metadata in the response"
-            }
+                .checkNotNull {
+                    "There is no metadata string in the response"
+                }
+                .let(jsonObjectMapper::readTree)
+                .also {
+                    check(it.isArray) {
+                        "The metadata is not an array"
+                    }
+                }
 
-            val metadata = jsonObjectMapper.readTree(metadataString)
-            check(metadata.isArray) {
-                "The metadata is not an array"
-            }
-
-            val description = metadata
+            val description: String = metadata
                 .firstOrNull { it[0].asText() == "text/plain" }
                 ?.get(1)
                 ?.asText()
                 ?.takeIf(String::isNotEmpty)
-            checkNotNull(description) {
-                "There is no text/plain description in the metadata"
-            }
+                .checkNotNull {
+                    "There is no text/plain description in the metadata"
+                }
 
             return UsernameInfo(
                 callbackUrl = callbackUrl,

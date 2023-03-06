@@ -12,6 +12,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
+import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.data.CreatedInvoicesCounter
 import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
@@ -36,13 +37,12 @@ class MainViewModel(
     private val compositeDisposable = CompositeDisposable()
     private val log = kLogger("MainVM")
 
-    val state: MutableLiveData<State> = MutableLiveData()
-    val enteredAmount: MutableLiveData<CharSequence?> = MutableLiveData(null)
-    val enteredAmountError: MutableLiveData<EnteredAmountError> =
-        MutableLiveData(EnteredAmountError.None)
-    val canPay: MutableLiveData<Boolean> = MutableLiveData(false)
+    val state = MutableLiveData<State>()
+    val enteredAmount = MutableLiveData<CharSequence?>(null)
+    val enteredAmountError = MutableLiveData<EnteredAmountError>(EnteredAmountError.None)
+    val canPay = MutableLiveData(false)
 
-    private var isTipping: Boolean = false
+    private var isTipping = false
     private val parsedAmount: BigDecimal
         get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
     private var lastExplicitlyLoadedUsernameInfo: UsernameInfo? = null
@@ -52,7 +52,7 @@ class MainViewModel(
         class FailedLoadingUsernameInfo(val error: Throwable) : State()
         class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State()
         object CreatingInvoice : State()
-        class FailedCreatingInvoice(val error: Throwable) : State()
+        object FailedCreatingInvoice : State()
         class DoneCreatingInvoice(val invoiceString: String) : State()
         object Tip : State()
         object Finish : State()
@@ -167,9 +167,9 @@ class MainViewModel(
     private var createInvoiceDisposable: Disposable? = null
     fun createInvoice() {
         val usernameInfo = (state.value as? State.DoneLoadingUsernameInfo)?.usernameInfo
-        checkNotNull(usernameInfo) {
-            "There is no loaded username info to create an invoice for"
-        }
+            .checkNotNull {
+                "There is no loaded username info to create an invoice for"
+            }
 
         val amountSat = parsedAmount
 
@@ -210,7 +210,7 @@ class MainViewModel(
                         "createInvoice(): creation_failed"
                     }
 
-                    state.value = State.FailedCreatingInvoice(error)
+                    state.value = State.FailedCreatingInvoice
                 }
             )
             .addTo(compositeDisposable)

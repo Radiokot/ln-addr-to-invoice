@@ -16,9 +16,9 @@ fun EditText.bindTextTwoWay(
     liveData: MutableLiveData<CharSequence?>
 ) {
     val lifecycleOwner = findViewTreeLifecycleOwner()
-    checkNotNull(lifecycleOwner) {
-        "The view must be attached to a lifecycle owner"
-    }
+        .checkNotNull {
+            "The view must be attached to a lifecycle owner"
+        }
 
     this.doOnTextChanged { text, _, _, _ ->
         liveData.value = text

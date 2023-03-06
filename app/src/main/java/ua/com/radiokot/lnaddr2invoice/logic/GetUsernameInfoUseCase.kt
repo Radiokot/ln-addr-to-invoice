@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.toSingle
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 
@@ -24,9 +25,9 @@ class GetUsernameInfoUseCase(
 
     fun perform(): Single<UsernameInfo> {
         return getUsernameAndHost()
-            .doOnSuccess {
-                username = it.first
-                host = it.second
+            .doOnSuccess { pair ->
+                username = pair.first
+                host = pair.second
             }
             .flatMap { getUsernameInfo() }
     }
@@ -56,9 +57,9 @@ class GetUsernameInfoUseCase(
         check(response.isSuccessful)
 
         val body = response.body
-        checkNotNull(body) {
-            "The username info response has no body"
-        }
+            .checkNotNull {
+                "The username info response has no body"
+            }
 
         UsernameInfo.fromResponse(
             response = jsonObjectMapper.readTree(body.byteStream()),

@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.toSingle
 import ua.com.radiokot.lnaddr2invoice.base.util.SAT
 import java.math.BigDecimal
@@ -45,19 +46,19 @@ class GetBolt11InvoiceUseCase(
         check(response.isSuccessful)
 
         val body = response.body
-        checkNotNull(body) {
-            "The invoice response has no body"
-        }
+            .checkNotNull {
+                "The invoice response has no body"
+            }
 
         val json = jsonObjectMapper.readTree(body.byteStream())
 
-        val invoice = json["pr"]
+        val invoice: String = json["pr"]
             ?.asText("")
             ?.takeIf(String::isNotEmpty)
-        checkNotNull(invoice) {
-            "There is no invoice in the response"
-        }
+            .checkNotNull {
+                "There is no invoice in the response"
+            }
 
-        invoice.toString()
+        invoice
     }.toSingle().subscribeOn(Schedulers.io())
 }
