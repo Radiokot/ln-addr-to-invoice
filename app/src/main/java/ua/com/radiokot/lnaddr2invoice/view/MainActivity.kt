@@ -243,7 +243,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onLoading() {
-        SoftInputUtil.hideSoftInput(this@MainActivity)
+        SoftInputUtil.hideSoftInput(window)
         binding.loadingAnimationView.playAnimation()
     }
 
@@ -263,7 +263,7 @@ class MainActivity : AppCompatActivity() {
             descriptionTextView.text = usernameInfo.description
 
             amountEditText.requestFocus()
-            SoftInputUtil.showSoftInputOnView(amountEditText)
+            SoftInputUtil.showSoftInput(window)
         }
     }
 
@@ -311,6 +311,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onTip() {
-        SoftInputUtil.hideSoftInput(this)
+        SoftInputUtil.hideSoftInput(window)
     }
 }
