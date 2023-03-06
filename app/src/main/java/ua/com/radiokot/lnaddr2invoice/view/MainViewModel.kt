@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -44,6 +45,7 @@ class MainViewModel(
     private var isTipping: Boolean = false
     private val parsedAmount: BigDecimal
         get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
+    private var lastExplicitlyLoadedUsernameInfo: UsernameInfo? = null
 
     sealed class State {
         class LoadingUsernameInfo(val address: String) : State()
@@ -95,6 +97,23 @@ class MainViewModel(
         }
     }
 
+    fun onCancel() {
+        val fallbackUsernameInfo = lastExplicitlyLoadedUsernameInfo
+
+        when {
+            (state.value is State.Tip || isTipping) && fallbackUsernameInfo != null -> {
+                isTipping = false
+                cancelUsernameInfoLoading()
+                cancelInvoiceCreation()
+                onDoneLoadingUsernameInfo(fallbackUsernameInfo)
+            }
+            else -> {
+                state.value = State.Finish
+            }
+        }
+    }
+
+    private var loadUsernameInfoDisposable: Disposable? = null
     fun loadUsernameInfo(address: String) {
         log.debug {
             "loadUsernameInfo(): begin_loading:" +
@@ -105,7 +124,8 @@ class MainViewModel(
             parametersOf(address)
         }
 
-        Single.zip(
+        loadUsernameInfoDisposable?.dispose()
+        loadUsernameInfoDisposable = Single.zip(
             useCase.perform(),
             Single.timer(500, TimeUnit.MILLISECONDS)
         ) { usernameInfo, _ -> usernameInfo }
@@ -132,11 +152,19 @@ class MainViewModel(
             .addTo(compositeDisposable)
     }
 
+    private fun cancelUsernameInfoLoading() {
+        loadUsernameInfoDisposable?.dispose()
+    }
+
     private fun onDoneLoadingUsernameInfo(usernameInfo: UsernameInfo) {
+        if (!isTipping) {
+            lastExplicitlyLoadedUsernameInfo = usernameInfo
+        }
         enteredAmount.value = ""
         state.value = State.DoneLoadingUsernameInfo(usernameInfo)
     }
 
+    private var createInvoiceDisposable: Disposable? = null
     fun createInvoice() {
         val usernameInfo = (state.value as? State.DoneLoadingUsernameInfo)?.usernameInfo
         checkNotNull(usernameInfo) {
@@ -155,7 +183,8 @@ class MainViewModel(
             parametersOf(amountSat, usernameInfo.callbackUrl)
         }
 
-        Single.zip(
+        createInvoiceDisposable?.dispose()
+        createInvoiceDisposable = Single.zip(
             useCase.perform(),
             Single.timer(500, TimeUnit.MILLISECONDS)
         ) { invoiceString, _ -> invoiceString }
@@ -185,6 +214,10 @@ class MainViewModel(
                 }
             )
             .addTo(compositeDisposable)
+    }
+
+    private fun cancelInvoiceCreation() {
+        createInvoiceDisposable?.dispose()
     }
 
     fun onBottomLabelClicked() {

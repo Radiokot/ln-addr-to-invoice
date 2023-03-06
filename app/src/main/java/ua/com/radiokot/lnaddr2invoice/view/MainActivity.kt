@@ -72,12 +72,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
         onBackPressedDispatcher.addCallback(this) {
-            finish()
+            viewModel.onCancel()
         }
 
         with(binding) {
             cancelButton.setOnClickListener {
-                finish()
+                viewModel.onCancel()
             }
 
             bottomLabelTextView.setOnClickListener {
