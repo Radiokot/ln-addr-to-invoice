@@ -28,7 +28,7 @@ import java.text.NumberFormat
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModel()
-    private val log = kLogger("MainActivity")
+    private val log = kLogger("MMainActivity")
 
     private val toastManager: ToastManager by inject()
     private val satAmountFormat: NumberFormat by inject(named(InjectedAmountFormat.SAT))
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             ?.takeIf(String::isNotEmpty)
 
         if (address == null) {
-            log.warn {
+            log.error {
                 "onCreate(): missing_address"
             }
             finish()
@@ -110,95 +110,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
             }
-        }
-    }
 
-    private fun subscribeToState() {
-        viewModel.state.observe(this) { state ->
-            when (state) {
-                is MainViewModel.State.LoadingUsernameInfo ->
-                    onLoadingUsernameInfo(state.address)
-
-                is MainViewModel.State.DoneLoadingUsernameInfo ->
-                    onDoneLoadingUsernameInfo(state.usernameInfo)
-
-                is MainViewModel.State.FailedLoadingUsernameInfo ->
-                    onFailedLoadingUsernameInfo(state.error)
-
-                MainViewModel.State.CreatingInvoice ->
-                    onCreatingInvoice()
-
-                is MainViewModel.State.DoneCreatingInvoice ->
-                    onDoneCreatingInvoice(state.invoiceString)
-
-                is MainViewModel.State.FailedCreatingInvoice ->
-                    onFailedCreatingInvoice()
-
-                is MainViewModel.State.Tip ->
-                    onTip()
-
-                is MainViewModel.State.Finish ->
-                    finish()
-            }
-        }
-    }
-
-    private fun onLoadingUsernameInfo(address: String) {
-        showLoading(
-            getString(
-                R.string.template_resolving_address,
-                address
-            )
-        )
-    }
-
-    private fun showLoading(message: String) {
-        with(binding) {
-            loadingLayout.visibility = View.VISIBLE
-            invoiceCreationLayout.visibility = View.GONE
-            tipLayout.visibility = View.GONE
-
-            primaryButton.visibility = View.GONE
-
-            loadingProgressTextView.text = message
-            loadingAnimationView.playAnimation()
-        }
-    }
-
-    private fun onFailedLoadingUsernameInfo(error: Throwable) {
-        when (error) {
-            is IOException -> {
-                toastManager.long(R.string.error_need_internet_to_load_username_info)
-            }
-            else -> {
-                toastManager.long(R.string.error_failed_to_load_username_info)
-            }
-        }
-        finish()
-    }
-
-    private fun onDoneLoadingUsernameInfo(usernameInfo: UsernameInfo) {
-        with(binding) {
-            loadingLayout.visibility = View.GONE
-            invoiceCreationLayout.visibility = View.VISIBLE
-            tipLayout.visibility = View.GONE
-
-            with(primaryButton) {
-                visibility = View.VISIBLE
-                text = getString(R.string.pay_the_invoice)
-                setOnClickListener {
-                    if (viewModel.canPay.value == true) {
-                        payTheInvoice()
-                    }
-                }
-            }
-
-            descriptionTextView.text = usernameInfo.description
-
-            amountEditText.requestFocus()
-            SoftInputUtil.showSoftInputOnView(amountEditText)
-
-            viewModel.enteredAmountError.removeObservers(this@MainActivity)
             viewModel.enteredAmountError.observe(this@MainActivity) { error ->
                 when (error) {
                     is MainViewModel.EnteredAmountError.None -> {
@@ -218,11 +130,140 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
 
-            viewModel.canPay.removeObservers(this@MainActivity)
-            viewModel.canPay.observe(this@MainActivity) { canPay ->
-                primaryButton.isEnabled = canPay
+    private fun subscribeToState() {
+        viewModel.state.observe(this) { state ->
+            log.debug {
+                "subscribeToState(): new_state:" +
+                        "\nstate=$state"
             }
+
+            with(binding) {
+                loadingLayout.visibility =
+                    if (state is MainViewModel.State.Loading)
+                        View.VISIBLE
+                    else
+                        View.GONE
+
+                loadingProgressTextView.text =
+                    when (state) {
+                        is MainViewModel.State.Loading -> {
+                            when (state) {
+                                is MainViewModel.State.Loading.LoadingUsernameInfo ->
+                                    getString(
+                                        R.string.template_resolving_address,
+                                        state.address
+                                    )
+                                is MainViewModel.State.Loading.CreatingInvoice ->
+                                    getString(R.string.progress_creating_invoice)
+                            }
+                        }
+                        else ->
+                            "You shouldn't see this"
+                    }
+
+                invoiceCreationLayout.visibility =
+                    if (state is MainViewModel.State.DoneLoadingUsernameInfo)
+                        View.VISIBLE
+                    else
+                        View.GONE
+
+                tipLayout.visibility =
+                    if (state is MainViewModel.State.Tip)
+                        View.VISIBLE
+                    else
+                        View.GONE
+
+                with(primaryButton) {
+                    when (state) {
+                        is MainViewModel.State.Loading -> {
+                            visibility = View.GONE
+                        }
+                        is MainViewModel.State.DoneLoadingUsernameInfo -> {
+                            visibility = View.VISIBLE
+                            text = getString(R.string.pay_the_invoice)
+                            viewModel.canPay.removeObservers(this@MainActivity)
+                            viewModel.canPay.observe(this@MainActivity) { canPay ->
+                                isEnabled = canPay
+                            }
+                            setOnClickListener {
+                                if (isEnabled) {
+                                    payTheInvoice()
+                                }
+                            }
+                        }
+                        is MainViewModel.State.Tip -> {
+                            visibility = View.VISIBLE
+                            text = getString(R.string.tip_the_author)
+                            isEnabled = true
+                            viewModel.canPay.removeObservers(this@MainActivity)
+                            setOnClickListener {
+                                viewModel.tip()
+                            }
+                        }
+                        else -> {
+                            visibility = View.GONE
+                        }
+                    }
+                }
+            }
+
+            when (state) {
+                is MainViewModel.State.Loading ->
+                    onLoading()
+
+                is MainViewModel.State.DoneLoadingUsernameInfo ->
+                    onDoneLoadingUsernameInfo(state.usernameInfo)
+
+                is MainViewModel.State.DoneCreatingInvoice ->
+                    onDoneCreatingInvoice(state.invoiceString)
+
+                is MainViewModel.State.Final.FailedLoadingUsernameInfo ->
+                    onFailedLoadingUsernameInfo(state.error)
+
+                is MainViewModel.State.Final.FailedCreatingInvoice ->
+                    onFailedCreatingInvoice()
+
+                is MainViewModel.State.Tip ->
+                    onTip()
+
+                is MainViewModel.State.Final.Finish -> {}
+            }
+
+            if (state is MainViewModel.State.Final) {
+                log.debug {
+                    "subscribeToState(): finishing"
+                }
+
+                finish()
+            }
+        }
+    }
+
+    private fun onLoading() {
+        SoftInputUtil.hideSoftInput(this@MainActivity)
+        binding.loadingAnimationView.playAnimation()
+    }
+
+    private fun onFailedLoadingUsernameInfo(error: Throwable) {
+        when (error) {
+            is IOException -> {
+                toastManager.long(R.string.error_need_internet_to_load_username_info)
+            }
+            else -> {
+                toastManager.long(R.string.error_failed_to_load_username_info)
+            }
+        }
+    }
+
+    private fun onDoneLoadingUsernameInfo(usernameInfo: UsernameInfo) {
+        with(binding) {
+            descriptionTextView.text = usernameInfo.description
+
+            amountEditText.requestFocus()
+            SoftInputUtil.showSoftInputOnView(amountEditText)
         }
     }
 
@@ -230,21 +271,13 @@ class MainActivity : AppCompatActivity() {
         viewModel.createInvoice()
     }
 
-    private fun onCreatingInvoice() {
-        SoftInputUtil.hideSoftInput(this)
-        showLoading(getString(R.string.progress_creating_invoice))
-    }
-
     private fun onFailedCreatingInvoice() {
         toastManager.short(R.string.error_failed_to_create_invoice)
-        finish()
     }
 
     private fun onDoneCreatingInvoice(invoiceString: String) {
         launchPaymentIntent(invoiceString)
-
         setResult(Activity.RESULT_OK)
-
         viewModel.onInvoicePaymentLaunched()
     }
 
@@ -279,22 +312,5 @@ class MainActivity : AppCompatActivity() {
 
     private fun onTip() {
         SoftInputUtil.hideSoftInput(this)
-
-        with(binding) {
-            loadingLayout.visibility = View.GONE
-            invoiceCreationLayout.visibility = View.GONE
-            tipLayout.visibility = View.VISIBLE
-
-            viewModel.canPay.removeObservers(this@MainActivity)
-
-            with(primaryButton) {
-                visibility = View.VISIBLE
-                text = getString(R.string.tip_the_author)
-                isEnabled = true
-                setOnClickListener {
-                    viewModel.tip()
-                }
-            }
-        }
     }
 }

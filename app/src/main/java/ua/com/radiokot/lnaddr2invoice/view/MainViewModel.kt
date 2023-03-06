@@ -47,15 +47,21 @@ class MainViewModel(
         get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
     private var lastExplicitlyLoadedUsernameInfo: UsernameInfo? = null
 
-    sealed class State {
-        class LoadingUsernameInfo(val address: String) : State()
-        class FailedLoadingUsernameInfo(val error: Throwable) : State()
-        class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State()
-        object CreatingInvoice : State()
-        object FailedCreatingInvoice : State()
-        class DoneCreatingInvoice(val invoiceString: String) : State()
-        object Tip : State()
-        object Finish : State()
+    sealed interface State {
+        sealed interface Loading : State {
+            class LoadingUsernameInfo(val address: String) : Loading
+            object CreatingInvoice : Loading
+        }
+
+        sealed interface Final : State {
+            object FailedCreatingInvoice : Final
+            class FailedLoadingUsernameInfo(val error: Throwable) : Final
+            object Finish : Final
+        }
+
+        class DoneLoadingUsernameInfo(val usernameInfo: UsernameInfo) : State
+        class DoneCreatingInvoice(val invoiceString: String) : State
+        object Tip : State
     }
 
     sealed class EnteredAmountError {
@@ -108,7 +114,7 @@ class MainViewModel(
                 onDoneLoadingUsernameInfo(fallbackUsernameInfo)
             }
             else -> {
-                state.value = State.Finish
+                state.value = State.Final.Finish
             }
         }
     }
@@ -131,7 +137,7 @@ class MainViewModel(
         ) { usernameInfo, _ -> usernameInfo }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { state.value = State.LoadingUsernameInfo(address) }
+            .doOnSubscribe { state.value = State.Loading.LoadingUsernameInfo(address) }
             .subscribeBy(
                 onSuccess = { usernameInfo ->
                     log.debug {
@@ -146,7 +152,7 @@ class MainViewModel(
                         "loadUsernameInfo(): loading_failed"
                     }
 
-                    state.value = State.FailedLoadingUsernameInfo(error)
+                    state.value = State.Final.FailedLoadingUsernameInfo(error)
                 }
             )
             .addTo(compositeDisposable)
@@ -191,7 +197,7 @@ class MainViewModel(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
-                state.value = State.CreatingInvoice
+                state.value = State.Loading.CreatingInvoice
             }
             .subscribeBy(
                 onSuccess = { invoiceString ->
@@ -210,7 +216,7 @@ class MainViewModel(
                         "createInvoice(): creation_failed"
                     }
 
-                    state.value = State.FailedCreatingInvoice
+                    state.value = State.Final.FailedCreatingInvoice
                 }
             )
             .addTo(compositeDisposable)
@@ -251,7 +257,7 @@ class MainViewModel(
         if (suggestTip) {
             state.value = State.Tip
         } else {
-            state.value = State.Finish
+            state.value = State.Final.Finish
         }
     }
 
