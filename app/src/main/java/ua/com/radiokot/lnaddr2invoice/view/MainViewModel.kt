@@ -209,7 +209,7 @@ class MainViewModel(
                     log.debug {
                         "createInvoice(): created:" +
                                 "\ninvoiceString=$invoiceString," +
-                                "\ncreatedInvoices=${createdInvoicesCounter.createdInvoiceCount}"
+                                "\ncreatedInvoicesCount=${createdInvoicesCounter.createdInvoiceCount}"
                     }
 
                     state.value = State.DoneCreatingInvoice(invoiceString)

@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     private fun subscribeToState() {
         viewModel.state.observe(this) { state ->
             log.debug {
-                "subscribeToState(): new_state:" +
+                "subscribeToState(): received_new_state:" +
                         "\nstate=$state"
             }
 
@@ -255,10 +255,15 @@ class MainActivity : AppCompatActivity() {
 
             if (state is MainViewModel.State.Final) {
                 log.debug {
-                    "subscribeToState(): finishing"
+                    "subscribeToState(): finishing_by_final_state"
                 }
 
                 finish()
+            }
+
+            log.debug {
+                "subscribeToState(): handled_new_state:" +
+                        "\nstate=$state"
             }
         }
     }
