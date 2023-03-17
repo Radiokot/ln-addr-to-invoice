@@ -2,7 +2,7 @@ package ua.com.radiokot.lnaddr2invoice.base.util.http
 
 import okhttp3.Response
 import okhttp3.ResponseBody
-import okio.IOException
+import java.io.IOException
 
 class HttpException(
     val code: Int,

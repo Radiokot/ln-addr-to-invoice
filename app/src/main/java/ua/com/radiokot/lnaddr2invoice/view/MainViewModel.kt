@@ -38,7 +38,7 @@ class MainViewModel(
     private val log = kLogger("MainVM")
 
     val state = MutableLiveData<State>()
-    val enteredAmount = MutableLiveData<CharSequence?>(null)
+    val enteredAmount = MutableLiveData<String>()
     val enteredAmountError = MutableLiveData<EnteredAmountError>(EnteredAmountError.None)
     val canPay = MutableLiveData(false)
 
@@ -123,7 +123,11 @@ class MainViewModel(
     }
 
     private var loadUsernameInfoDisposable: Disposable? = null
-    fun loadUsernameInfo(address: String) {
+    fun loadUsernameInfo(rawAddress: String) {
+        val address = rawAddress
+            .trim()
+            .trim('/')
+
         log.debug {
             "loadUsernameInfo(): begin_loading:" +
                     "\naddress=$address"
@@ -236,7 +240,7 @@ class MainViewModel(
     }
 
     private fun toTip() {
-        enteredAmount.value = null
+        enteredAmount.value = ""
         state.value = State.Tip
     }
 

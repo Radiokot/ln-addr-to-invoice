@@ -11,7 +11,6 @@ import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import okio.IOException
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
@@ -23,6 +22,7 @@ import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityMainBinding
 import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
+import java.io.IOException
 import java.text.NumberFormat
 
 class MainActivity : AppCompatActivity() {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         subscribeToState()
 
         if (savedInstanceState == null) {
-            viewModel.loadUsernameInfo(address)
+            viewModel.loadUsernameInfo(rawAddress = address)
         }
     }
 

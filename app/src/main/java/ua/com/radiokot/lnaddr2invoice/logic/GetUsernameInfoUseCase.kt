@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
@@ -33,13 +34,24 @@ class GetUsernameInfoUseCase(
     }
 
     private fun getUsernameAndHost(): Single<Pair<String, String>> = {
-        // Parse the address with [HttpUrl].
-        with("http://$address".toHttpUrl()) {
-            check(username.isNotEmpty()) {
-                "The address has no username"
-            }
-            username to host
+        check(address.contains('@')) {
+            "The address is not an internet identifier"
         }
+        check(address.length <= 320) {
+            "The address exceeds the maximum internet identifier length"
+        }
+
+        val username = address.substringBefore('@', "")
+        check(username.isNotEmpty()) {
+            "The address has no username"
+        }
+
+        val host = address.substringAfter('@', "")
+        check(host.isNotEmpty()) {
+            "The address has no host"
+        }
+
+        username to host
     }.toSingle()
 
     private fun getUsernameInfo(): Single<UsernameInfo> = {
