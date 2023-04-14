@@ -21,7 +21,7 @@ The app doesn't add any extra fee to your payment.
 - kotlin-logging with slf4j-handroid
 
 ---
-⚡ [Send me a tip](https://iris.to/radiokot@nostr.21ideas.org)
+⚡ [Send me a tip](https://radiokot.com.ua/tip)
 
 ![lightning:oleg@radiokot.com.ua](https://user-images.githubusercontent.com/5675681/220079850-2370cffb-761b-44cb-b106-3a70ff89e1a6.png)
 
