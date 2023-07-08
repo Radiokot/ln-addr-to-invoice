@@ -145,6 +145,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+
+            copyCheckBox.bindTextTwoWay(viewModel.isCopyInvoiceChecked)
         }
     }
 

@@ -63,8 +63,8 @@
                 <TextView
                     android:id="@+id/description_text_view"
                     android:layout_width="match_parent"
-                    android:gravity="center"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                     tools:text="Pay to oleg@radiokot.com.ua" />
 
@@ -117,6 +117,16 @@
                         style="@style/QuickAmountButton"
                         tools:text="1 000" />
                 </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/copy_check_box"
+                    android:checked="true"
+                    style="@style/Widget.Material3.CompoundButton.CheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-6dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/copy_invoice_to_clipboard" />
             </LinearLayout>
 
             <LinearLayout

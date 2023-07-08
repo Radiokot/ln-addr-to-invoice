@@ -1,5 +1,8 @@
 package ua.com.radiokot.lnaddr2invoice.di
 
+import android.content.ClipboardManager
+import android.content.Context
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -14,6 +17,8 @@ val viewModelModules: List<Module> = listOf(
                 createdInvoicesCounter = get(),
                 tipStateStorage = get(),
                 tipEveryNthInvoice = getNumericProperty("tipAfterNthInvoice", Int.MAX_VALUE),
+                clipboardManager = androidApplication().getSystemService(Context.CLIPBOARD_SERVICE)
+                        as? ClipboardManager
             )
         }
     }

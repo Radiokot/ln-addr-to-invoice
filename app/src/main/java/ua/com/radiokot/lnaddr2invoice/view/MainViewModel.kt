@@ -1,5 +1,7 @@
 package ua.com.radiokot.lnaddr2invoice.view
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -27,6 +29,7 @@ class MainViewModel(
     private val createdInvoicesCounter: CreatedInvoicesCounter,
     private val tipStateStorage: TipStateStorage,
     private val tipEveryNthInvoice: Int,
+    private val clipboardManager: ClipboardManager?,
 ) : ViewModel(), KoinComponent {
     init {
         require(tipEveryNthInvoice > 0) {
@@ -40,6 +43,7 @@ class MainViewModel(
     val state = MutableLiveData<State>()
     val enteredAmount = MutableLiveData<String>()
     val enteredAmountError = MutableLiveData<EnteredAmountError>(EnteredAmountError.None)
+    val isCopyInvoiceChecked = MutableLiveData(true)
     val canPay = MutableLiveData(false)
 
     private var isTipping = false
@@ -85,14 +89,17 @@ class MainViewModel(
                 enteredAmount.isNullOrEmpty() -> {
                     enteredAmountError.value = EnteredAmountError.None
                 }
+
                 parsedAmount < usernameInfo.minSendableSat -> {
                     enteredAmountError.value =
                         EnteredAmountError.TooSmall(usernameInfo.minSendableSat)
                 }
+
                 parsedAmount > usernameInfo.maxSendableSat -> {
                     enteredAmountError.value =
                         EnteredAmountError.TooBig(usernameInfo.maxSendableSat)
                 }
+
                 else -> {
                     enteredAmountError.value = EnteredAmountError.None
                 }
@@ -116,6 +123,7 @@ class MainViewModel(
                 cancelInvoiceCreation()
                 onDoneLoadingUsernameInfo(fallbackUsernameInfo)
             }
+
             else -> {
                 state.value = State.Final.Finish
             }
@@ -185,11 +193,13 @@ class MainViewModel(
             }
 
         val amountSat = parsedAmount
+        val copyToClipboard = isCopyInvoiceChecked.value == true
 
         log.debug {
             "createInvoice(): begin_creation:" +
                     "\namountSat=$amountSat," +
-                    "\nusernameInfo=$usernameInfo"
+                    "\nusernameInfo=$usernameInfo," +
+                    "\ncopyToClipboard=$copyToClipboard"
         }
 
         val useCase = get<GetBolt11InvoiceUseCase> {
@@ -214,6 +224,23 @@ class MainViewModel(
                         "createInvoice(): created:" +
                                 "\ninvoiceString=$invoiceString," +
                                 "\ncreatedInvoicesCount=${createdInvoicesCounter.createdInvoiceCount}"
+                    }
+
+                    if (copyToClipboard && clipboardManager != null) {
+                        clipboardManager.setPrimaryClip(
+                            ClipData.newPlainText(
+                                "Bitcoin Lightning invoice",
+                                invoiceString,
+                            )
+                        )
+
+                        log.debug {
+                            "createInvoice(): copied_to_clipboard"
+                        }
+                    } else if (copyToClipboard) {
+                        log.warn {
+                            "createInvoice(): cant_copy_without_clipboard_manager"
+                        }
                     }
 
                     state.value = State.DoneCreatingInvoice(invoiceString)
