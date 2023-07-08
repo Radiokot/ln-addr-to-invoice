@@ -7,10 +7,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.updateLayoutParams
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
@@ -24,6 +26,7 @@ import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 import java.io.IOException
 import java.text.NumberFormat
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -112,16 +115,28 @@ class MainActivity : AppCompatActivity() {
             }
 
             viewModel.enteredAmountError.observe(this@MainActivity) { error ->
+                // Compensate error space.
+                quickAmountsLayout.updateLayoutParams {
+                    this as MarginLayoutParams
+                    topMargin =
+                        ((if (error is MainViewModel.EnteredAmountError.None)
+                            -12
+                        else
+                            4) * resources.displayMetrics.density).roundToInt()
+                }
+
                 when (error) {
                     is MainViewModel.EnteredAmountError.None -> {
                         amountTextInputLayout.error = null
                     }
+
                     is MainViewModel.EnteredAmountError.TooSmall -> {
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_less_than,
                             satAmountFormat.format(error.minAmount)
                         )
                     }
+
                     is MainViewModel.EnteredAmountError.TooBig -> {
                         amountTextInputLayout.error = getString(
                             R.string.template_error_you_cant_send_more_than,
@@ -172,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                                         R.string.template_resolving_address,
                                         state.address
                                     )
+
                                 is MainViewModel.State.Loading.CreatingInvoice ->
                                     getString(R.string.progress_creating_invoice)
                             }
@@ -179,6 +195,7 @@ class MainActivity : AppCompatActivity() {
                         // Keep the loading visible before finish to avoid blinking.
                         is MainViewModel.State.DoneCreatingInvoice ->
                             getString(R.string.progress_creating_invoice)
+
                         else ->
                             "You shouldn't see this"
                     }
@@ -200,6 +217,7 @@ class MainActivity : AppCompatActivity() {
                         is MainViewModel.State.Loading -> {
                             visibility = View.GONE
                         }
+
                         is MainViewModel.State.DoneLoadingUsernameInfo -> {
                             visibility = View.VISIBLE
                             text = getString(R.string.pay_the_invoice)
@@ -213,6 +231,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
+
                         is MainViewModel.State.Tip -> {
                             visibility = View.VISIBLE
                             text = getString(R.string.tip_the_author)
@@ -222,6 +241,7 @@ class MainActivity : AppCompatActivity() {
                                 viewModel.tip()
                             }
                         }
+
                         else -> {
                             visibility = View.GONE
                         }
@@ -278,6 +298,7 @@ class MainActivity : AppCompatActivity() {
             is IOException -> {
                 toastManager.long(R.string.error_need_internet_to_load_username_info)
             }
+
             else -> {
                 toastManager.long(R.string.error_failed_to_load_username_info)
             }

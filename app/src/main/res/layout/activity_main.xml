@@ -63,6 +63,7 @@
                 <TextView
                     android:id="@+id/description_text_view"
                     android:layout_width="match_parent"
+                    android:gravity="center"
                     android:layout_height="wrap_content"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                     tools:text="Pay to oleg@radiokot.com.ua" />
@@ -81,7 +82,8 @@
 
                     <!-- errorEnabled is important, otherwise
                     the height may be messed up once the error is shown
-                    when the window is in the floating mode-->
+                    when the window is in the floating mode.
+                    The space is compensated programmatically. -->
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/amount_edit_text"
@@ -97,8 +99,10 @@
                     android:id="@+id/quick_amounts_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="-12dp"
                     android:orientation="horizontal">
+
+                    <!-- The top margin is set programmatically. -->
 
                     <com.google.android.material.button.MaterialButton
                         style="@style/QuickAmountButton"
