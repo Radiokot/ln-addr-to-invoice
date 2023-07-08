@@ -75,3 +75,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
+
+// Make the built APKs have a release-style name.
+android.applicationVariants.all { variant ->
+    variant.outputs.all { output ->
+        outputFileName = "${variant.applicationId}-${variant.versionName}.apk"
+    }
+}
