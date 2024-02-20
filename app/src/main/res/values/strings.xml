@@ -3,6 +3,7 @@
     <string name="cancel">Cancel</string>
     <string name="error_need_internet_to_load_username_info">Internet connection is needed to load username info</string>
     <string name="error_failed_to_load_username_info">Failed to load username info. The link must contain an email-like address</string>
+    <string name="error_only_addresses_allowed">Only email-like addresses are allowed in this app</string>
     <string name="template_resolving_address">Resolving %1$s…</string>
     <string name="amount">Amount</string>
     <string name="enter_amount">Enter amount</string>

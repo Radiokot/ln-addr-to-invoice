@@ -23,6 +23,7 @@ import ua.com.radiokot.lnaddr2invoice.base.view.SoftInputUtil
 import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityMainBinding
 import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
+import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
 import java.io.IOException
 import java.text.NumberFormat
@@ -299,6 +300,10 @@ class MainActivity : AppCompatActivity() {
         when (error) {
             is IOException -> {
                 toastManager.long(R.string.error_need_internet_to_load_username_info)
+            }
+
+            is GetUsernameInfoUseCase.AddressIsAnInvoiceException -> {
+                toastManager.long(R.string.error_only_addresses_allowed)
             }
 
             else -> {
