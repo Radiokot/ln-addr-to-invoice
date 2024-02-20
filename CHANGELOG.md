@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Show a dedicated message when accidentally opening an invoice with the app
 
+### Fixed
+- Opening invoices in Zeus
+
 ## [1.2.0] - 2023-07-08
 
 ### Added

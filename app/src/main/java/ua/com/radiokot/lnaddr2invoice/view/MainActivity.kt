@@ -336,13 +336,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchPaymentIntent(invoiceString: String) {
-        val paymentIntent = Intent(Intent.ACTION_VIEW)
-            .setData(
-                Uri.Builder()
-                    .scheme("lightning")
-                    .authority(invoiceString)
-                    .build()
-            )
+        val paymentIntent = Intent(Intent.ACTION_VIEW, Uri.parse("lightning:$invoiceString"))
 
         Intent.createChooser(
             paymentIntent,
@@ -362,6 +356,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             .also(::startActivity)
+
+        log.debug {
+            "launchPaymentIntent(): launched:" +
+                    "\ndata=${paymentIntent.data}"
+        }
     }
 
     private fun onTip() {
