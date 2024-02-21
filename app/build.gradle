@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'ua.com.radiokot.lnaddr2invoice'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "ua.com.radiokot.lnaddr2invoice"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 4
         versionName "1.2.0"
 
