@@ -1,0 +1,5 @@
+Added:
+- Show a dedicated message when accidentally opening an invoice with the app
+
+Fixed:
+- Opening invoices in Zeus

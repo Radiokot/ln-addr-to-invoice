@@ -11,8 +11,8 @@ android {
         applicationId "ua.com.radiokot.lnaddr2invoice"
         minSdk 21
         targetSdk 34
-        versionCode 4
-        versionName "1.2.0"
+        versionCode 5
+        versionName "1.2.1"
 
         resConfigs "en"
 
