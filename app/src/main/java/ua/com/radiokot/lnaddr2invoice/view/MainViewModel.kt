@@ -311,6 +311,15 @@ class MainViewModel(
         loadUsernameInfo(authorTipAddress)
     }
 
+    fun updateQuickAmount(
+        index: Int,
+        newValue: Long,
+    ) {
+        val updatedList = quickAmounts.value!!.toMutableList()
+        updatedList[index] = newValue
+        quickAmounts.postValue(updatedList)
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()

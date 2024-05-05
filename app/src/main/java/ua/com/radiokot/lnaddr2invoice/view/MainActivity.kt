@@ -1,5 +1,6 @@
 package ua.com.radiokot.lnaddr2invoice.view
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
@@ -10,9 +11,11 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.Button
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.updateLayoutParams
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
@@ -22,6 +25,7 @@ import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.base.view.SoftInputUtil
 import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityMainBinding
+import ua.com.radiokot.lnaddr2invoice.databinding.ViewQuickAmountEditDialogBinding
 import ua.com.radiokot.lnaddr2invoice.di.InjectedAmountFormat
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
@@ -95,6 +99,14 @@ class MainActivity : AppCompatActivity() {
 
                         setOnClickListener {
                             viewModel.enteredAmount.value = quickAmount.toString()
+                        }
+
+                        setOnLongClickListener {
+                            editQuickAmount(
+                                index = i,
+                                currentValue = quickAmount,
+                            )
+                            true
                         }
                     }
                 }
@@ -365,5 +377,47 @@ class MainActivity : AppCompatActivity() {
 
     private fun onTip() {
         SoftInputUtil.hideSoftInput(window)
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun editQuickAmount(
+        index: Int,
+        currentValue: Long,
+    ) {
+        val dialogView = ViewQuickAmountEditDialogBinding.inflate(layoutInflater)
+        lateinit var dialog: AlertDialog
+
+        fun trySaveAmount(): Boolean {
+            val parsedAmount = dialogView.valueTextInput.editText?.text?.toString()?.toLongOrNull() ?: 0L
+            return if (parsedAmount != 0L) {
+                viewModel.updateQuickAmount(
+                    index = index,
+                    newValue = parsedAmount,
+                )
+                true
+            } else {
+                false
+            }
+        }
+
+        with(dialogView.valueTextInput.editText!!) {
+            setText(currentValue.toString())
+            setOnEditorActionListener { _, _, _ ->
+                if (trySaveAmount()) {
+                    dialog.dismiss()
+                    false
+                } else {
+                    true
+                }
+            }
+        }
+
+        dialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogView.root)
+            .setPositiveButton(R.string.ok) { _, _ ->
+                trySaveAmount()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 }
