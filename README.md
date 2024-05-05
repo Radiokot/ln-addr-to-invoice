@@ -10,6 +10,8 @@ Some popular Bitcoin Lightning wallets, like Muun or Blue Wallet, don't support 
 ## How to use
 To use the app, click on the Lightning address link (like tip or zap in Nostr) and select "LN Address to Invoice" app. Follow the instructions and then pay the invoice with your favorite wallet. 
 
+▶ [Demo video (YouTube)](https://www.youtube.com/shorts/FMpSQ-l64Cw)
+
 The app doesn't add any extra fee to your payment.
 
 ## Download
