@@ -88,9 +88,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.onBottomLabelClicked()
             }
 
-            // Quick amounts.
-            listOf(200, 500, 1000)
-                .forEachIndexed { i, quickAmount ->
+            viewModel.quickAmounts.observe(this@MainActivity) { quickAmounts ->
+                quickAmounts.forEachIndexed { i, quickAmount ->
                     (quickAmountsLayout.getChildAt(i) as Button).apply {
                         text = quickAmountFormat.format(quickAmount)
 
@@ -99,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+            }
         }
     }
 

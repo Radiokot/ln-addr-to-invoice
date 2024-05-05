@@ -46,6 +46,11 @@ class MainViewModel(
     val isCopyInvoiceChecked = MutableLiveData(true)
     val canPay = MutableLiveData(false)
 
+    /**
+     * A list of 3 amount options for quick input.
+     */
+    val quickAmounts = MutableLiveData(listOf(200L, 500L, 1000L))
+
     private var isTipping = false
     private var suggestedTipping = false
     private val parsedAmount: BigDecimal
