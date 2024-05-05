@@ -4,7 +4,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
-import java.math.BigDecimal
+import java.math.BigInteger
 
 val useCaseModules: List<Module> = listOf(
     module {
@@ -16,7 +16,7 @@ val useCaseModules: List<Module> = listOf(
             )
         }
 
-        factory { (amountSat: BigDecimal, callbackUrl: String) ->
+        factory { (amountSat: BigInteger, callbackUrl: String) ->
             GetBolt11InvoiceUseCase(
                 amountSat = amountSat,
                 callbackUrl = callbackUrl,

@@ -3,7 +3,7 @@ package ua.com.radiokot.lnaddr2invoice.model
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Assert
 import org.junit.Test
-import java.math.BigDecimal
+import java.math.BigInteger
 
 class UsernameInfoTest {
     @Test
@@ -12,15 +12,15 @@ class UsernameInfoTest {
             "{\"callback\":\"https://livingroomofsatoshi.com/api/v1/lnurl/payreq/2adffa0b-67c1-4b50-a5be-4994b488efb1\",\"maxSendable\":100000000000,\"minSendable\":1000,\"metadata\":\"[[\\\"text/plain\\\",\\\"Pay to Wallet of Satoshi user: liquidtarget16\\\"],[\\\"text/identifier\\\",\\\"liquidtarget16@walletofsatoshi.com\\\"]]\",\"commentAllowed\":32,\"tag\":\"payRequest\",\"allowsNostr\":true,\"nostrPubkey\":\"be1d89794bf92de5dd64c1e60f6a2c70c140abac9932418fee30c5c637fe9479\"}"
                     to UsernameInfo(
                 callbackUrl = "https://livingroomofsatoshi.com/api/v1/lnurl/payreq/2adffa0b-67c1-4b50-a5be-4994b488efb1",
-                minSendableSat = BigDecimal.ONE,
-                maxSendableSat = BigDecimal(100000000),
+                minSendableSat = BigInteger.ONE,
+                maxSendableSat = BigInteger.valueOf(100000000),
                 description = "Pay to Wallet of Satoshi user: liquidtarget16",
             ),
             "{\"status\":\"OK\",\"tag\":\"payRequest\",\"commentAllowed\":255,\"callback\":\"https://getalby.com/lnurlp/radiokot/callback\",\"metadata\":\"[[\\\"text/identifier\\\",\\\"radiokot@getalby.com\\\"],[\\\"text/plain\\\",\\\"Sats for radiokot\\\"]]\",\"minSendable\":1000,\"maxSendable\":11000000000,\"payerData\":{\"name\":{\"mandatory\":false},\"email\":{\"mandatory\":false}}}"
                     to UsernameInfo(
                 callbackUrl = "https://getalby.com/lnurlp/radiokot/callback",
-                minSendableSat = BigDecimal.ONE,
-                maxSendableSat = BigDecimal(11000000),
+                minSendableSat = BigInteger.ONE,
+                maxSendableSat = BigInteger.valueOf(11000000),
                 description = "Sats for radiokot",
             )
         )

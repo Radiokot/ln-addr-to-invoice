@@ -1,6 +1,6 @@
 package ua.com.radiokot.lnaddr2invoice.base.util
 
-import java.math.BigDecimal
+import java.math.BigInteger
 
 // 1 Satoshi in milliSatoshis.
-val SAT = BigDecimal(1000)
+val SAT_IN_MILLIS = BigInteger("1000")

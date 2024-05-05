@@ -1,7 +1,5 @@
 package ua.com.radiokot.lnaddr2invoice.integration.logic
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import okhttp3.OkHttpClient
 import org.junit.Assert
 import org.junit.Test
 import org.koin.core.context.startKoin
@@ -9,7 +7,7 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 import ua.com.radiokot.lnaddr2invoice.di.commonModules
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
-import java.math.BigDecimal
+import java.math.BigInteger
 
 class GetUsernameInfoUseCaseTest: KoinTest {
     @Test
@@ -31,7 +29,7 @@ class GetUsernameInfoUseCaseTest: KoinTest {
         println(usernameInfo)
         Assert.assertEquals(
             0,
-            usernameInfo.minSendableSat.compareTo(BigDecimal.ONE),
+            usernameInfo.minSendableSat.compareTo(BigInteger.ONE),
         )
     }
 }

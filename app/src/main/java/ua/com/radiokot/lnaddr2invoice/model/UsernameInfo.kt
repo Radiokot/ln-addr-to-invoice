@@ -3,14 +3,13 @@ package ua.com.radiokot.lnaddr2invoice.model
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
-import ua.com.radiokot.lnaddr2invoice.base.util.SAT
-import java.math.BigDecimal
-import java.math.MathContext
+import ua.com.radiokot.lnaddr2invoice.base.util.SAT_IN_MILLIS
+import java.math.BigInteger
 
 data class UsernameInfo(
     val callbackUrl: String,
-    val maxSendableSat: BigDecimal,
-    val minSendableSat: BigDecimal,
+    val maxSendableSat: BigInteger,
+    val minSendableSat: BigInteger,
     val description: String,
 ) {
     companion object {
@@ -34,20 +33,18 @@ data class UsernameInfo(
                     "There is no callback URL in the response"
                 }
 
-            val maxSendableSat: BigDecimal = response["maxSendable"]
-                ?.asLong(0)
-                ?.toBigDecimal()
-                ?.divide(SAT, MathContext.DECIMAL32)
-                ?.stripTrailingZeros()
+            val maxSendableSat: BigInteger = response["maxSendable"]
+                ?.asText("")
+                ?.toBigIntegerOrNull()
+                ?.divide(SAT_IN_MILLIS)
                 .checkNotNull {
                     "There is no max sendable amount in the response"
                 }
 
-            val minSendableSat: BigDecimal = response["minSendable"]
-                ?.asLong(0)
-                ?.toBigDecimal()
-                ?.divide(SAT, MathContext.DECIMAL32)
-                ?.stripTrailingZeros()
+            val minSendableSat: BigInteger = response["minSendable"]
+                ?.asText("")
+                ?.toBigIntegerOrNull()
+                ?.divide(SAT_IN_MILLIS)
                 .checkNotNull {
                     "There is no min sendable amount in the response"
                 }

@@ -8,12 +8,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.toSingle
-import ua.com.radiokot.lnaddr2invoice.base.util.SAT
-import java.math.BigDecimal
-import java.math.RoundingMode
+import ua.com.radiokot.lnaddr2invoice.base.util.SAT_IN_MILLIS
+import java.math.BigInteger
 
 class GetBolt11InvoiceUseCase(
-    val amountSat: BigDecimal,
+    val amountSat: BigInteger,
     val callbackUrl: String,
     val httpClient: OkHttpClient,
     val jsonObjectMapper: ObjectMapper,
@@ -31,10 +30,8 @@ class GetBolt11InvoiceUseCase(
                     .addQueryParameter(
                         "amount",
                         amountSat
-                            .multiply(SAT)
-                            .setScale(0, RoundingMode.DOWN)
-                            .stripTrailingZeros()
-                            .toPlainString()
+                            .multiply(SAT_IN_MILLIS)
+                            .toString()
                     )
                     .build()
             )

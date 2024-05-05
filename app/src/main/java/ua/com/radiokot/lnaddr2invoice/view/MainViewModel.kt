@@ -22,7 +22,7 @@ import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
 import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
 import ua.com.radiokot.lnaddr2invoice.model.UsernameInfo
-import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.concurrent.TimeUnit
 
 class MainViewModel(
@@ -57,8 +57,8 @@ class MainViewModel(
 
     private var isTipping = false
     private var suggestedTipping = false
-    private val parsedAmount: BigDecimal
-        get() = BigDecimal(enteredAmount.value?.toString()?.toLongOrNull() ?: 0L)
+    private val parsedAmount: BigInteger
+        get() = enteredAmount.value?.toString()?.toBigIntegerOrNull() ?: BigInteger.ZERO
     private var lastExplicitlyLoadedUsernameInfo: UsernameInfo? = null
 
     sealed interface State {
@@ -79,8 +79,8 @@ class MainViewModel(
     }
 
     sealed class EnteredAmountError {
-        class TooSmall(val minAmount: BigDecimal) : EnteredAmountError()
-        class TooBig(val maxAmount: BigDecimal) : EnteredAmountError()
+        class TooSmall(val minAmount: BigInteger) : EnteredAmountError()
+        class TooBig(val maxAmount: BigInteger) : EnteredAmountError()
         object None : EnteredAmountError()
     }
 
@@ -115,7 +115,7 @@ class MainViewModel(
             }
 
             canPay.value =
-                parsedAmount > BigDecimal.ZERO
+                parsedAmount > BigInteger.ZERO
                         && enteredAmountError.value == EnteredAmountError.None
         }
     }
