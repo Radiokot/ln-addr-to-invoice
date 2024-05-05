@@ -23,6 +23,9 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:maxLines="1"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck">
+
+            <requestFocus />
+        </com.google.android.material.textfield.TextInputEditText>
     </com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

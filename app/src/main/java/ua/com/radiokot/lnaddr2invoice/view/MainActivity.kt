@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowManager
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
@@ -402,6 +403,7 @@ class MainActivity : AppCompatActivity() {
 
         with(dialogView.valueTextInput.editText!!) {
             setText(currentValue.toString())
+            setSelection(text.length)
             setOnEditorActionListener { _, _, _ ->
                 if (trySaveAmount()) {
                     dialog.dismiss()
@@ -419,5 +421,8 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
+            .also {
+                it.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            }
     }
 }
