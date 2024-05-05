@@ -17,6 +17,7 @@ import org.koin.core.parameter.parametersOf
 import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.data.CreatedInvoicesCounter
+import ua.com.radiokot.lnaddr2invoice.data.QuickAmountsStorage
 import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
 import ua.com.radiokot.lnaddr2invoice.logic.GetBolt11InvoiceUseCase
 import ua.com.radiokot.lnaddr2invoice.logic.GetUsernameInfoUseCase
@@ -28,6 +29,7 @@ class MainViewModel(
     private val authorTipAddress: String,
     private val createdInvoicesCounter: CreatedInvoicesCounter,
     private val tipStateStorage: TipStateStorage,
+    private val quickAmountsStorage: QuickAmountsStorage,
     private val tipEveryNthInvoice: Int,
     private val clipboardManager: ClipboardManager?,
 ) : ViewModel(), KoinComponent {
@@ -49,7 +51,9 @@ class MainViewModel(
     /**
      * A list of 3 amount options for quick input.
      */
-    val quickAmounts = MutableLiveData(listOf(200L, 500L, 1000L))
+    val quickAmounts = MutableLiveData(
+        quickAmountsStorage.quickAmounts ?: listOf(200L, 500L, 1000L)
+    )
 
     private var isTipping = false
     private var suggestedTipping = false
@@ -318,6 +322,7 @@ class MainViewModel(
         val updatedList = quickAmounts.value!!.toMutableList()
         updatedList[index] = newValue
         quickAmounts.postValue(updatedList)
+        quickAmountsStorage.quickAmounts = updatedList
     }
 
     override fun onCleared() {

@@ -16,9 +16,10 @@ val viewModelModules: List<Module> = listOf(
                 authorTipAddress = getProperty("authorTipAddress"),
                 createdInvoicesCounter = get(),
                 tipStateStorage = get(),
+                quickAmountsStorage = get(),
                 tipEveryNthInvoice = getNumericProperty("tipAfterNthInvoice", Int.MAX_VALUE),
                 clipboardManager = androidApplication().getSystemService(Context.CLIPBOARD_SERVICE)
-                        as? ClipboardManager
+                        as? ClipboardManager,
             )
         }
     }

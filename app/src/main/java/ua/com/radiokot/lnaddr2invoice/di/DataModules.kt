@@ -6,7 +6,9 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import ua.com.radiokot.lnaddr2invoice.data.CreatedInvoicesCounter
+import ua.com.radiokot.lnaddr2invoice.data.QuickAmountsStorage
 import ua.com.radiokot.lnaddr2invoice.data.SharedPrefsCreatedInvoicesCounter
+import ua.com.radiokot.lnaddr2invoice.data.SharedPrefsQuickAmountsStorage
 import ua.com.radiokot.lnaddr2invoice.data.SharedPrefsTipStateStorage
 import ua.com.radiokot.lnaddr2invoice.data.TipStateStorage
 
@@ -38,5 +40,12 @@ val dataModules: List<Module> = listOf(
                 key = "tip_state",
             )
         } bind TipStateStorage::class
+
+        single {
+            SharedPrefsQuickAmountsStorage(
+                sharedPreferences = get(named(InjectedSharedPreferences.NO_BACKUP)),
+                key = "quick_amounts",
+            )
+        } bind QuickAmountsStorage::class
     },
 )
