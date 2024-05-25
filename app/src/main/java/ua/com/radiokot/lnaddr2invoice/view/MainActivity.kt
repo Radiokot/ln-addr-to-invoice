@@ -15,6 +15,7 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -238,6 +239,8 @@ class MainActivity : AppCompatActivity() {
                         View.VISIBLE
                     else
                         View.GONE
+
+                bottomLabelTextView.isVisible = state !is MainViewModel.State.Tip
 
                 with(primaryButton) {
                     when (state) {
