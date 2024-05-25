@@ -20,4 +20,5 @@
     <string name="bottom_label">LN Address to Invoice. Support &#128150;</string>
     <string name="copy_invoice_to_clipboard">Copy the invoice to clipboard</string>
     <string name="used_open_source_software">Used open-source software</string>
+    <string name="source_code">Source code</string>
 </resources>

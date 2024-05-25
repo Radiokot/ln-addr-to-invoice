@@ -18,11 +18,13 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 import ua.com.radiokot.lnaddr2invoice.R
 import ua.com.radiokot.lnaddr2invoice.base.extension.bindTextTwoWay
+import ua.com.radiokot.lnaddr2invoice.base.extension.checkNotNull
 import ua.com.radiokot.lnaddr2invoice.base.extension.kLogger
 import ua.com.radiokot.lnaddr2invoice.base.view.SoftInputUtil
 import ua.com.radiokot.lnaddr2invoice.base.view.ToastManager
@@ -116,6 +118,10 @@ class MainActivity : AppCompatActivity() {
 
             osLicensesButton.setOnClickListener {
                 openOpenSourceLicensesDialog()
+            }
+
+            sourceCodeButton.setOnClickListener {
+                openSourceCodeUrl()
             }
         }
     }
@@ -441,5 +447,17 @@ class MainActivity : AppCompatActivity() {
 
         OpenSourceLicensesDialogFragment()
             .show(supportFragmentManager, OpenSourceLicensesDialogFragment.TAG)
+    }
+
+    private fun openSourceCodeUrl() {
+        val sourceCodeUrl = getKoin().getProperty<String>("sourceCodeUrl").checkNotNull {
+            "No source code URL specified"
+        }
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(sourceCodeUrl)
+            )
+        )
     }
 }

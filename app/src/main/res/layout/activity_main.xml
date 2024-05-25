@@ -156,8 +156,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="20dp"
+                    android:minHeight="0dp"
                     android:text="@string/used_open_source_software"
+                    android:textSize="12sp" />
+
+                <Button
+                    android:id="@+id/source_code_button"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:minHeight="0dp"
+                    android:text="@string/source_code"
                     android:textSize="12sp" />
             </LinearLayout>
 
