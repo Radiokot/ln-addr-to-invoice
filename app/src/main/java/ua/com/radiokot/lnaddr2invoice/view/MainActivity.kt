@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -111,6 +112,10 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+            }
+
+            osLicensesButton.setOnClickListener {
+                openOpenSourceLicensesDialog()
             }
         }
     }
@@ -389,7 +394,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var dialog: AlertDialog
 
         fun trySaveAmount(): Boolean {
-            val parsedAmount = dialogView.valueTextInput.editText?.text?.toString()?.toLongOrNull() ?: 0L
+            val parsedAmount =
+                dialogView.valueTextInput.editText?.text?.toString()?.toLongOrNull() ?: 0L
             return if (parsedAmount != 0L) {
                 viewModel.updateQuickAmount(
                     index = index,
@@ -424,5 +430,16 @@ class MainActivity : AppCompatActivity() {
             .also {
                 it.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
             }
+    }
+
+    private fun openOpenSourceLicensesDialog() {
+        supportFragmentManager.fragments.forEach { fragment ->
+            if (fragment.tag == OpenSourceLicensesDialogFragment.TAG && fragment is DialogFragment) {
+                fragment.dismissAllowingStateLoss()
+            }
+        }
+
+        OpenSourceLicensesDialogFragment()
+            .show(supportFragmentManager, OpenSourceLicensesDialogFragment.TAG)
     }
 }

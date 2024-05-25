@@ -120,12 +120,12 @@
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/copy_check_box"
-                    android:checked="true"
                     style="@style/Widget.Material3.CompoundButton.CheckBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="-6dp"
                     android:layout_marginTop="16dp"
+                    android:checked="true"
                     android:text="@string/copy_invoice_to_clipboard" />
             </LinearLayout>
 
@@ -150,6 +150,15 @@
                     android:text="@string/tip_suggestion"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
+                <Button
+                    android:id="@+id/os_licenses_button"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/used_open_source_software"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <Space

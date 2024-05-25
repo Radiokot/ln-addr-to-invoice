@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.jaredsburrows.license'
 }
 
 android {
@@ -35,6 +36,12 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+    licenseReport {
+        generateHtmlReport = true
+        generateJsonReport = false
+        generateCsvReport = false
+        copyHtmlReportToAssets = true
     }
 }
 
