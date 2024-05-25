@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.Button
@@ -198,13 +197,9 @@ class MainActivity : AppCompatActivity() {
                     return@with
                 }
 
-                loadingLayout.visibility =
-                    if (state is MainViewModel.State.Loading
-                        || state is MainViewModel.State.DoneCreatingInvoice
-                    )
-                        View.VISIBLE
-                    else
-                        View.GONE
+                loadingLayout.isVisible =
+                    state is MainViewModel.State.Loading
+                            || state is MainViewModel.State.DoneCreatingInvoice
 
                 loadingProgressTextView.text =
                     when (state) {
@@ -228,28 +223,21 @@ class MainActivity : AppCompatActivity() {
                             "You shouldn't see this"
                     }
 
-                invoiceCreationLayout.visibility =
-                    if (state is MainViewModel.State.DoneLoadingUsernameInfo)
-                        View.VISIBLE
-                    else
-                        View.GONE
+                invoiceCreationLayout.isVisible =
+                    state is MainViewModel.State.DoneLoadingUsernameInfo
 
-                tipLayout.visibility =
-                    if (state is MainViewModel.State.Tip)
-                        View.VISIBLE
-                    else
-                        View.GONE
+                tipLayout.isVisible = state is MainViewModel.State.Tip
 
                 bottomLabelTextView.isVisible = state !is MainViewModel.State.Tip
 
                 with(primaryButton) {
                     when (state) {
                         is MainViewModel.State.Loading -> {
-                            visibility = View.GONE
+                            isVisible = false
                         }
 
                         is MainViewModel.State.DoneLoadingUsernameInfo -> {
-                            visibility = View.VISIBLE
+                            isVisible = true
                             text = getString(R.string.pay_the_invoice)
                             viewModel.canPay.removeObservers(this@MainActivity)
                             viewModel.canPay.observe(this@MainActivity) { canPay ->
@@ -263,7 +251,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         is MainViewModel.State.Tip -> {
-                            visibility = View.VISIBLE
+                            isVisible = true
                             text = getString(R.string.tip_the_author)
                             isEnabled = true
                             viewModel.canPay.removeObservers(this@MainActivity)
@@ -273,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         else -> {
-                            visibility = View.GONE
+                            isVisible = false
                         }
                     }
                 }
