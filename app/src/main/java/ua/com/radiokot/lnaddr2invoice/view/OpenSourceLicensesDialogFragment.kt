@@ -15,7 +15,7 @@ import ua.com.radiokot.lnaddr2invoice.R
 class OpenSourceLicensesDialogFragment : AppCompatDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return MaterialAlertDialogBuilder(requireContext())
-            .setTitle(" ")
+            .setTitle(getString(R.string.used_open_source_software) + "\n")
             .setView(WebView(requireContext()).apply {
                 setBackgroundColor(Color.TRANSPARENT)
 
@@ -92,7 +92,6 @@ class OpenSourceLicensesDialogFragment : AppCompatDialogFragment() {
                 </style>
             `
             document.head.insertAdjacentHTML('beforeend', immersiveCss)
-            console.log('OOLEG tosos')
         """.trimIndent()
 
     private fun Int.toCssRgb(): String =
