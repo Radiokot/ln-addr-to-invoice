@@ -27,6 +27,14 @@
 
                 <data android:scheme="lightning" />
             </intent-filter>
+
+            <intent-filter android:label="@string/send_sats">
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
     </application>
 

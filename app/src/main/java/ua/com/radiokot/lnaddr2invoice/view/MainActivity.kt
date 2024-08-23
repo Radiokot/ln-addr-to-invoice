@@ -56,9 +56,10 @@ class MainActivity : AppCompatActivity() {
                     "\nsavedState=$savedInstanceState"
         }
 
-        val address = intent
+        val address = (intent
             ?.dataString
             ?.substringAfter(intent.data?.scheme + ":", "")
+            ?: intent.getStringExtra("android.intent.extra.PROCESS_TEXT"))
             ?.takeIf(String::isNotEmpty)
 
         if (address == null) {

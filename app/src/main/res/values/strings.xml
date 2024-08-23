@@ -21,4 +21,5 @@
     <string name="copy_invoice_to_clipboard">Copy the invoice to clipboard</string>
     <string name="used_open_source_software">Used open-source software</string>
     <string name="source_code">Source code</string>
+    <string name="send_sats">Send sats</string>
 </resources>
