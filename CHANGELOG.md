@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - "Send sats" system text selection action
+- An introduction explaining how to use the app
 
 ## [1.3.0] - 2024-05-26
 

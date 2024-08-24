@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Intro" parent="Base.Theme.LightningAddressToInvoice">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+</resources>

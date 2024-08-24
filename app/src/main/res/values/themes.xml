@@ -27,7 +27,9 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+    </style>
 
+    <style name="Theme.LightningAddressToInvoice" parent="Base.Theme.LightningAddressToInvoice">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -40,5 +42,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="Theme.LightningAddressToInvoice" parent="Base.Theme.LightningAddressToInvoice" />
+    <style name="Theme.Intro" parent="Base.Theme.LightningAddressToInvoice">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

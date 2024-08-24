@@ -22,4 +22,32 @@
     <string name="used_open_source_software">Used open-source software</string>
     <string name="source_code">Source code</string>
     <string name="send_sats">Send sats</string>
+    <string name="intro_start">Welcome. Please let me quickly explain this app to you.\n\nLN Address to Invoice
+        allows paying to email-like Lightning addresses from unsupported wallets.
+        This utility is launched when you interact with addresses in your browser or other apps.
+        Here\'s how it is done.
+    </string>
+    <string name="intro_clicking_address">Clicking an address</string>
+    <string name="intro_clicking_address_details">Sometimes, a Lightning address is a clickable link, just like an email.
+        When you click it, LN Address to Invoice appears.
+        In the following profile card, try clicking the address:
+    </string>
+    <string name="intro_selecting_address">Selecting an address</string>
+    <string name="intro_selecting_address_details">Often a Lightning address is just a text.
+        In this case, select it and in the appeared system menu look for the <b>Send sats</b> action.
+        In the following comment, try selecting the address and use the app action:
+    </string>
+    <string name="template_intro_clicking_address_address" translatable="false">
+        <![CDATA[
+        &#9889; <a href="lightning:%1$s">%1$s</a>
+        ]]>
+    </string>
+    <string name="intro_selecting_address_comment_title">In reply to: Tony</string>
+    <string name="template_intro_selecting_address_comment" translatable="false">Setting up an address under your domain is easy,
+        see LUD-16. For example, mine is %1$s and it\'s an Alby alias
+    </string>
+    <string name="intro_clicking_address_website" translatable="false">&#127968; radiokot.com.ua</string>
+    <string name="intro_clicking_address_npub" translatable="false">npub12358n500vfnf9j522nueg05k9yvhh97936smfgat6mledzegp5yskzrjdj</string>
+    <string name="intro_clicking_address_name" translatable="false">Oleg K</string>
+    <string name="got_it">Got it</string>
 </resources>

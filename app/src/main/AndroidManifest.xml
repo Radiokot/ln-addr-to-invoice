@@ -14,10 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LightningAddressToInvoice"
         tools:targetApi="31">
+
         <activity
             android:name=".view.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.LightningAddressToInvoice"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="stateAlwaysVisible">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -27,6 +28,13 @@
 
                 <data android:scheme="lightning" />
             </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name=".ProcessTextAction"
+            android:exported="true"
+            android:label="@string/send_sats"
+            android:targetActivity=".view.MainActivity">
 
             <intent-filter android:label="@string/send_sats">
                 <action android:name="android.intent.action.PROCESS_TEXT" />
@@ -35,7 +43,21 @@
 
                 <data android:mimeType="text/plain" />
             </intent-filter>
+        </activity-alias>
+
+        <activity
+            android:name=".view.IntroActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Intro"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
-
 </manifest>
