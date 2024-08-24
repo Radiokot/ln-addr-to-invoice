@@ -22,7 +22,7 @@
     <string name="used_open_source_software">Used open-source software</string>
     <string name="source_code">Source code</string>
     <string name="send_sats">Send sats</string>
-    <string name="intro_start">Welcome. Please let me quickly explain this app to you.\n\nLN Address to Invoice
+    <string name="intro_start">Welcome. Please, let me quickly explain this app to you.\n\nLN Address to Invoice
         allows paying to email-like Lightning addresses from unsupported wallets.
         This utility is launched when you interact with addresses in your browser or other apps.
         Here\'s how it is done.
