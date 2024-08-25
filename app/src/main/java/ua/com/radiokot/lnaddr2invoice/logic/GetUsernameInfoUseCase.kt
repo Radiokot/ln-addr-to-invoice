@@ -27,7 +27,7 @@ class GetUsernameInfoUseCase(
     fun perform(): Single<UsernameInfo> {
         return getUsernameAndHost()
             .onErrorResumeNext { error ->
-                if (error is IllegalArgumentException && address.startsWith(INVOICE_PREFIX_MAINNET))
+                if (error is IllegalArgumentException && address.startsWith(INVOICE_PREFIX))
                     Single.error(AddressIsAnInvoiceException())
                 else
                     Single.error(error)
@@ -88,6 +88,6 @@ class GetUsernameInfoUseCase(
     class AddressIsAnInvoiceException: Exception()
 
     private companion object {
-        private const val INVOICE_PREFIX_MAINNET = "lnbc1"
+        private const val INVOICE_PREFIX = "lnbc"
     }
 }
