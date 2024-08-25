@@ -55,6 +55,8 @@
     <string name="intro_pasting_address_details">If you see a Lightning address which is
         neither clickable nor selectable, or the presenting app doesn\'t support selection actions,
         just copy the address from there and paste into
-        LN Address to Invoice with the Paste button in the header.
+        LN Address to Invoice with the Paste button in the header of this screen
+        or with the <b>Paste address</b> launcher icon shortcut.
     </string>
+    <string name="error_clipboard_has_no_text">There\'s no copied text</string>
 </resources>

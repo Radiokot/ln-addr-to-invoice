@@ -50,7 +50,13 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Intro"
-            android:windowSoftInputMode="stateAlwaysHidden" >
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity-alias
+            android:name=".LauncherAlias"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:targetActivity=".view.IntroActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,6 +64,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/launcher_shortcuts" />
+        </activity-alias>
+
+        <activity
+            android:name=".view.PasteAddressActivity"
+            android:exported="true"
+            android:launchMode="singleTask" />
     </application>
 </manifest>

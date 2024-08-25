@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Send sats" system text selection action
 - An introduction explaining how to use the app
-- Ability to paste an address into the app
+- Ability to paste an address into the app either from the intro screen
+  or using the launcher icon shortcut
 
 ### Changed
 

@@ -1,13 +1,10 @@
 package ua.com.radiokot.lnaddr2invoice.view
 
-import android.content.ClipboardManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.getSystemService
 import androidx.core.text.HtmlCompat
 import androidx.core.view.forEach
 import org.koin.android.ext.android.getKoin
@@ -66,25 +63,10 @@ class IntroActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.intro, menu)
 
         menu.findItem(R.id.paste).setOnMenuItemClickListener {
-            proceedWithClipboardText()
+            startActivity(Intent(this, PasteAddressActivity::class.java))
             true
         }
 
         return super.onCreateOptionsMenu(menu)
-    }
-
-    private fun proceedWithClipboardText() {
-        val clipboardText = application.getSystemService<ClipboardManager>()
-            ?.primaryClip
-            ?.getItemAt(0)
-            ?.text
-            ?.toString()
-
-        if (clipboardText != null) {
-            startActivity(
-                Intent(this, MainActivity::class.java)
-                    .setData(Uri.parse("lightning:$clipboardText"))
-            )
-        }
     }
 }

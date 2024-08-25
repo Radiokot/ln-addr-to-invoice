@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_paste_go"
+        android:shortcutId="paste_address"
+        android:shortcutShortLabel="@string/paste_address">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="ua.com.radiokot.lnaddr2invoice.view.PasteAddressActivity"
+            android:targetPackage="ua.com.radiokot.lnaddr2invoice" />
+    </shortcut>
+</shortcuts>
