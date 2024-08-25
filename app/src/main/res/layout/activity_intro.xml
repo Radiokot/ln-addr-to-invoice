@@ -164,6 +164,21 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/intro_pasting_address"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/intro_pasting_address_details"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
+
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/got_it_button"
                 style="@style/Widget.Material3.Button"

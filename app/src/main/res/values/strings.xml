@@ -50,4 +50,11 @@
     <string name="intro_clicking_address_npub" translatable="false">npub12358n500vfnf9j522nueg05k9yvhh97936smfgat6mledzegp5yskzrjdj</string>
     <string name="intro_clicking_address_name" translatable="false">Oleg K</string>
     <string name="got_it">Got it</string>
+    <string name="paste_address">Paste address</string>
+    <string name="intro_pasting_address">Copy-pasting an address</string>
+    <string name="intro_pasting_address_details">If you see a Lightning address which is
+        neither clickable nor selectable, or the presenting app doesn\'t support selection actions,
+        just copy the address from there and paste into
+        LN Address to Invoice with the Paste button in the header.
+    </string>
 </resources>
