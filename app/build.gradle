@@ -65,7 +65,10 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
 
     implementation 'io.github.microutils:kotlin-logging:2.1.23'
-    implementation 'com.gitlab.mvysny.slf4j:slf4j-handroid:2.0.4'
+    implementation('com.gitlab.mvysny.slf4j:slf4j-handroid:2.0.13') {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    implementation 'org.slf4j:slf4j-api:2.0.7'
 
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
@@ -75,12 +78,14 @@ dependencies {
     testImplementation "io.insert-koin:koin-test:$koin_version"
     testImplementation "io.insert-koin:koin-test-junit4:$koin_version"
 
-    testImplementation('org.slf4j:slf4j-simple:2.0.6') {
-        exclude group: "com.gitlab.mvysny.slf4j", module: "slf4j-handroid"
-    }
+    testImplementation('org.slf4j:slf4j-simple:2.0.7')
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+configurations.testImplementation {
+    exclude module: 'slf4j-handroid'
 }
 
 // Make the built APKs have a release-style name.
