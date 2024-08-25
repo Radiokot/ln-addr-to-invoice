@@ -279,7 +279,10 @@ class MainActivity : AppCompatActivity() {
                     onDoneCreatingInvoice(state.invoiceString)
 
                 is MainViewModel.State.Final.FailedLoadingUsernameInfo ->
-                    onFailedLoadingUsernameInfo(state.error)
+                    onFailedLoadingUsernameInfo(
+                        error = state.error,
+                        invoiceStringToLaunch = state.invoiceStringToLaunch,
+                    )
 
                 is MainViewModel.State.Final.FailedCreatingInvoice ->
                     onFailedCreatingInvoice()
@@ -312,7 +315,10 @@ class MainActivity : AppCompatActivity() {
         binding.loadingAnimationView.playAnimation()
     }
 
-    private fun onFailedLoadingUsernameInfo(error: Throwable) {
+    private fun onFailedLoadingUsernameInfo(
+        error: Throwable,
+        invoiceStringToLaunch: String?,
+    ) {
         when (error) {
             is IOException -> {
                 toastManager.long(R.string.error_need_internet_to_load_username_info)
@@ -325,6 +331,10 @@ class MainActivity : AppCompatActivity() {
             else -> {
                 toastManager.long(R.string.error_failed_to_load_username_info)
             }
+        }
+
+        if (invoiceStringToLaunch != null) {
+            launchPaymentIntent(invoiceStringToLaunch)
         }
     }
 

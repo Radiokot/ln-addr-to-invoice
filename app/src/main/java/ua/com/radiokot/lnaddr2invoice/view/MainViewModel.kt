@@ -69,7 +69,11 @@ class MainViewModel(
 
         sealed interface Final : State {
             object FailedCreatingInvoice : Final
-            class FailedLoadingUsernameInfo(val error: Throwable) : Final
+            class FailedLoadingUsernameInfo(
+                val error: Throwable,
+                val invoiceStringToLaunch: String?,
+            ) : Final
+
             object Finish : Final
         }
 
@@ -176,7 +180,14 @@ class MainViewModel(
                         "loadUsernameInfo(): loading_failed"
                     }
 
-                    state.value = State.Final.FailedLoadingUsernameInfo(error)
+                    state.value = State.Final.FailedLoadingUsernameInfo(
+                        error = error,
+                        invoiceStringToLaunch =
+                        if (error is GetUsernameInfoUseCase.AddressIsAnInvoiceException)
+                            rawAddress
+                        else
+                            null,
+                    )
                 }
             )
             .addTo(compositeDisposable)

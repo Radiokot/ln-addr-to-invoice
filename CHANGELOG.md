@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - "Send sats" system text selection action
 - An introduction explaining how to use the app
 
+### Changed
+
+- When an invoice is accidentally opened with the app instead of an address,
+  the app now forwards it to your wallet(s) rather than just showing an error message
+
 ## [1.3.0] - 2024-05-26
 
 ### Added
