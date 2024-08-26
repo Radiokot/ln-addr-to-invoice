@@ -1,6 +1,8 @@
 # <img src="https://raw.githubusercontent.com/Radiokot/ln-addr-to-invoice/main/app/src/main/res/mipmap-hdpi/ic_launcher.png" alt="Icon" style="vertical-align: bottom; height: 1.2em;"/> LN Address to Invoice
 Some popular Bitcoin Lightning wallets, like Muun or Blue Wallet, don't support email-like Lightning addresses. This app allows paying to such addresses by turning them to convenient invoices. For me, it is helpful when zapping and tipping in Nostr.
 
+The app doesn't add any extra fee to your payment.
+
 <p float="left">
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" width=200 />
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" width=200 />
@@ -8,11 +10,22 @@ Some popular Bitcoin Lightning wallets, like Muun or Blue Wallet, don't support 
 </p>
 
 ## How to use
-To use the app, click on the Lightning address link (like tip or zap in Nostr) and select "LN Address to Invoice" app. Follow the instructions and then pay the invoice with your favorite wallet. 
+This utility is launched when you interact with addresses in your browser or other apps. Here's how it is done.
 
-▶ [Demo video (YouTube)](https://www.youtube.com/shorts/FMpSQ-l64Cw)
+### Clicking an address
+Sometimes, a Lightning address is a clickable link, just like an email. When you click it, LN Address to Invoice appears.
 
-The app doesn't add any extra fee to your payment.
+<img src="repository-assets/clicking.gif" width=300 />
+
+### Selecting an address
+Often a Lightning address is just a text. In this case, select it and in the appeared system menu look for the **Send sats** action.
+
+<img src="repository-assets/selection.gif" width=300 />
+
+### Copy-pasting an address
+If you see a Lightning address which is neither clickable nor selectable, or the presenting app doesn't support selection actions, just copy the address from there and paste into LN Address to Invoice with the Paste button in the header of the intro screen, or with the **Paste address** launcher icon shortcut.
+
+<img src="repository-assets/shortcut.gif" width=300 />
 
 ## Download
 [<img src="repository-assets/icon-github.svg" alt="APK" style="height: 1em;"/> APK from the latest release](https://github.com/Radiokot/ln-addr-to-invoice/releases/latest)

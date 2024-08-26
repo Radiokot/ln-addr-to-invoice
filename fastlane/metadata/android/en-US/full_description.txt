@@ -1,3 +1,14 @@
-Some popular Bitcoin Lightning wallets, like Muun, don't support email-like Lightning addresses. This app allows paying to such addresses by turning them to convenient invoices.
-To use the app, click on the Lightning address link (like tip or zap in Nostr) and select "LN Address to Invoice" app. Follow the instructions and then pay the invoice with your favorite wallet. 
-The app doesn't add any extra fee to your payment.
+Some popular Bitcoin Lightning wallets, like Muun, don't support email-like Lightning addresses.
+This app allows paying to such addresses by turning them to convenient invoices.
+It doesn't add any extra fee to your payment.
+
+This utility is launched when you interact with addresses in your browser or other apps. Here's how it is done:
+
+Clicking an address
+Sometimes, a Lightning address is a clickable link, just like an email. When you click it, LN Address to Invoice appears.
+
+Selecting an address
+Often a Lightning address is just a text. In this case, select it and in the appeared system menu look for the "Send sats" action.
+
+Copy-pasting an address
+If you see a Lightning address which is neither clickable nor selectable, or the presenting app doesn't support selection actions, just copy the address from there and paste into LN Address to Invoice with the Paste button in the header of the intro screen, or with the "Paste address" launcher icon shortcut.
