@@ -1,0 +1,7 @@
+Added:
+- "Send sats" system text selection action
+- An introduction explaining how to use the app
+- Ability to paste an address into the app either from the intro screen or using the launcher icon shortcut
+
+Changed:
+- When an invoice is accidentally opened with the app instead of an address, the app now forwards it to your wallet(s) rather than just showing an error message
