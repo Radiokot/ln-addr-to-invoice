@@ -4,20 +4,31 @@ plugins {
     id 'com.jaredsburrows.license'
 }
 
+def ciSigningKeystoreFile = project.file("ci-signing.jks")
+
 android {
     namespace 'ua.com.radiokot.lnaddr2invoice'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "ua.com.radiokot.lnaddr2invoice"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 7
         versionName "1.4.0"
 
         resConfigs "en"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        ci {
+            storeFile ciSigningKeystoreFile
+            storePassword "ci"
+            keyAlias "ci"
+            keyPassword "ci"
+        }
     }
 
     buildTypes {
@@ -27,16 +38,29 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+        languageVersion = kotlin_version
+        apiVersion = kotlin_version
     }
+
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
+
+    // F-Droid policy: https://gitlab.com/fdroid/admin/-/issues/367
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
+
     licenseReport {
         generateHtmlReport = true
         generateJsonReport = false
@@ -47,8 +71,8 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation "com.airbnb.android:lottie:3.4.0"

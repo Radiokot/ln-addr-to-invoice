@@ -4,24 +4,50 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.core.text.HtmlCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import org.koin.android.ext.android.getKoin
 import ua.com.radiokot.lnaddr2invoice.R
 import ua.com.radiokot.lnaddr2invoice.databinding.ActivityIntroBinding
 import ua.com.radiokot.lnaddr2invoice.util.InternalLinkMovementMethod
 
-class IntroActivity : AppCompatActivity() {
+class IntroActivity : ComponentActivity() {
     private lateinit var view: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         view = ActivityIntroBinding.inflate(layoutInflater)
         setContentView(view.root)
 
-        setSupportActionBar(view.toolbar)
+        ViewCompat.setOnApplyWindowInsetsListener(view.root) { _, insets ->
+            val systemBarsInsets = insets
+                .getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                            or WindowInsetsCompat.Type.displayCutout()
+                )
+
+            view.root.setPadding(
+                systemBarsInsets.left,
+                systemBarsInsets.top,
+                systemBarsInsets.right,
+                0
+            )
+
+            view.contentLayout.setPadding(
+                0,
+                0,
+                0,
+                systemBarsInsets.bottom,
+            )
+
+            WindowInsetsCompat.CONSUMED
+        }
 
         val tipAddress: String = getKoin().getProperty("authorTipAddress")!!
 
