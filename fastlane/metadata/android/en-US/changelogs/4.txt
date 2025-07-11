@@ -1,2 +1,0 @@
-Added:
-- Ability to copy the invoice to clipboard when paying

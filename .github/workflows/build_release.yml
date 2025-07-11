@@ -21,8 +21,8 @@ jobs:
             result: app/build/outputs/apk/release/*.apk
 
           - name: Bundle for Google Play
-            gradle-command: app:bundleReleasePlay
-            result: app/build/outputs/bundle/releasePlay/*.aab
+            gradle-command: app:bundleRelease
+            result: app/build/outputs/bundle/release/*.aab
 
     name: ${{ matrix.name }}
 

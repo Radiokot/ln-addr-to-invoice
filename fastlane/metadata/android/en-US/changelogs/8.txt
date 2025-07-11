@@ -1,0 +1,1 @@
+Nothing is changed from the user perspective, this is an Android 15 compatibility update enforced by Google Play

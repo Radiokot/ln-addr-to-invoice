@@ -1,4 +1,0 @@
-Added:
-- Ability to edit quick amounts by long press
-- Ability to see the list of used open-source software
-- Ability to see the source code of the app

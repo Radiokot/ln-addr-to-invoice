@@ -1,2 +1,0 @@
-Fixed
-- Crash and freeze on Android 5
