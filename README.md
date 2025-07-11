@@ -23,7 +23,7 @@ Often a Lightning address is just a text. In this case, select it and in the app
 <img src="repository-assets/selection.gif" width=300 />
 
 ### Copy-pasting an address
-If you see a Lightning address which is neither clickable nor selectable, or the presenting app doesn't support selection actions, just copy the address from there and paste into LN Address to Invoice with the Paste button in the header of the intro screen, or with the **Paste address** launcher icon shortcut.
+You can always just copy an address and paste into LN Address to Invoice with the Paste button in the header of the intro screen, or with the **Paste address** launcher icon shortcut.
 
 <img src="repository-assets/shortcut.gif" width=300 />
 
