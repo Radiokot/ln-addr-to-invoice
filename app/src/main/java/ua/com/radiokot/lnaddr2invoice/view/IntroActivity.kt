@@ -3,7 +3,6 @@ package ua.com.radiokot.lnaddr2invoice.view
 import android.content.Intent
 import android.os.Bundle
 import android.view.ActionMode
-import android.view.Menu
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.text.HtmlCompat
@@ -68,6 +67,12 @@ class IntroActivity : ComponentActivity() {
         view.gotItButton.setOnClickListener {
             finish()
         }
+
+        view.toolbar.inflateMenu(R.menu.intro)
+        view.toolbar.menu.findItem(R.id.paste).setOnMenuItemClickListener {
+            startActivity(Intent(this, PasteAddressActivity::class.java))
+            true
+        }
     }
 
     override fun onActionModeStarted(mode: ActionMode) {
@@ -83,16 +88,5 @@ class IntroActivity : ComponentActivity() {
                 item.title = textSelectionActionTitle
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.intro, menu)
-
-        menu.findItem(R.id.paste).setOnMenuItemClickListener {
-            startActivity(Intent(this, PasteAddressActivity::class.java))
-            true
-        }
-
-        return super.onCreateOptionsMenu(menu)
     }
 }
