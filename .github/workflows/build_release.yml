@@ -1,0 +1,51 @@
+name: Build release packages
+
+on:
+  workflow_dispatch:
+
+env:
+  java_version: 17
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: Releases
+
+    strategy:
+      matrix:
+        include:
+          - name: Main APK
+            gradle-command: app:assembleRelease
+            result: app/build/outputs/apk/release/*.apk
+
+          - name: Bundle for Google Play
+            gradle-command: app:bundleReleasePlay
+            result: app/build/outputs/bundle/releasePlay/*.aab
+
+    name: ${{ matrix.name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create the signing keystore
+        run: |
+          echo "${{ secrets.SIGNING_KEYSTORE_BASE64 }}" | base64 --decode > app/ci-signing.jks
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{env.java_version}}
+          distribution: temurin
+
+      - name: Build ${{ matrix.name }}
+        run: ./gradlew ${{ matrix.gradle-command }} --stacktrace
+
+      - name: Upload the packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: ${{ matrix.result }}
+          if-no-files-found: error

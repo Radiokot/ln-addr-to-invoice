@@ -35,6 +35,13 @@ android {
         release {
             minifyEnabled true
             shrinkResources true
+
+            if (ciSigningKeystoreFile.exists()) {
+                signingConfig signingConfigs.ci
+            } else {
+                signingConfig signingConfigs.debug
+            }
+
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
