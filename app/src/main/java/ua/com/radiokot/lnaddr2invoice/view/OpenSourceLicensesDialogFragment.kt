@@ -2,7 +2,10 @@ package ua.com.radiokot.lnaddr2invoice.view
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -49,6 +52,23 @@ class OpenSourceLicensesDialogFragment : AppCompatDialogFragment() {
                             ),
                             null
                         )
+                    }
+
+                    @Deprecated("Deprecated in Java")
+                    override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                        val context = view?.context ?: return false
+                        if (url == null || url.startsWith("file://")) {
+                            return false
+                        }
+                        return try {
+                            context.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            )
+                            true
+                        } catch (e: ActivityNotFoundException) {
+                            false
+                        }
                     }
                 }
 
